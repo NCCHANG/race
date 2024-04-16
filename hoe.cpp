@@ -4,9 +4,10 @@ using namespace std;
 
 int height = 8;
 int width = 33;
+char flash = 'f';
 
 class layout {
-    void plusMinus(int x) {
+    void plusMinus(int x) { //+---+---+ (depends on the x)
         if (x%4 == 0) {
             cout << '+';
         } else {
@@ -14,7 +15,7 @@ class layout {
         }
     }
 
-    void plusMinusNotBorder(int x) {
+    void plusMinusNotBorder(int x) { //+---+                +---+ (depends on the x)
         if ( x <= 4 || x >= width - 5) {
             plusMinus(x);
         } else {
@@ -22,7 +23,7 @@ class layout {
         }
     }
 
-    void straightLineBorder (int x) {
+    void straightLineBorder (int x) { //|   |   |   |   |   |   |   | (depends on the x)
         if (x%4 == 0) {
                 cout << '|';
             } else {
@@ -30,7 +31,7 @@ class layout {
             }
     }
 
-    void straightLineNotBorder (int x) {
+    void straightLineNotBorder (int x) { //|   |                |   | (depends on x)
         if ( x==0 || x==4 || x==width - 5 || x==width - 1) {
             cout << '|';
         } else {
