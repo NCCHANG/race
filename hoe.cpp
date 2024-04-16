@@ -5,6 +5,8 @@ using namespace std;
 int height = 8;
 int width = 33;
 char flash = 'f';
+int flashXPosition = 2;
+int flashYPosition = height - 1;
 
 class layout {
     void plusMinus(int x) { //+---+---+ (depends on the x)
@@ -23,18 +25,22 @@ class layout {
         }
     }
 
-    void straightLineBorder (int x) { //|   |   |   |   |   |   |   | (depends on the x)
+    void straightLineBorder (int x, int y) { //|   |   |   |   |   |   |   | (depends on the x)
         if (x%4 == 0) {
                 cout << '|';
+            } else if (x == flashXPosition && y == flashYPosition) {
+            cout << flash;  
             } else {
                 cout << ' ';
             }
     }
 
-    void straightLineNotBorder (int x) { //|   |                |   | (depends on x)
+    void straightLineNotBorder (int x, int y) { //|   |                |   | (depends on x)
         if ( x==0 || x==4 || x==width - 5 || x==width - 1) {
             cout << '|';
-        } else {
+        } else if (x == flashXPosition && y == flashYPosition) {
+            cout << flash;    
+        }else {
             cout << ' ';
         }
     }
@@ -51,19 +57,19 @@ class layout {
         for (int y = 0; y < height; y++)
         {
             cout << '\n';
-            
+            //|   |    | section
             for (int x = 0; x < width; x++) //|   |   |   |   | 
             {
                 if (y == 0 || y == height-1) {
-                    straightLineBorder(x);
+                    straightLineBorder(x, y);
                 }
                 else {
-                    straightLineNotBorder(x);
+                    straightLineNotBorder(x, y);
                 }
             }
 
             cout << '\n';
-
+            //plusminus section
             for (int x = 0; x < width; x++) // +---+---+---
             {
                 if (y==0 || y==height-2 || y==height-1)
