@@ -96,3 +96,16 @@ int main()
 
     return 0;
 }
+
+
+
+        // else if (flashXPosition == 30 && flashYPosition != 7) {
+        //     if (totalRandomNum >= 7 && flashYPosition != 0) {
+        //         flashYPosition = flashYPosition - (random - (totalRandomNum - 7));
+        //         flashXPosition = flashXPosition + (4 * (totalRandomNum - 7));
+        //     }
+        //     else {
+        //         flashYPosition = flashYPosition - random;
+        //     }        
+        //     printLayout();
+        // }

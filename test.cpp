@@ -93,21 +93,69 @@ class layout {
     }
 
 
-    void flashStep() {
+    void flashStepLayout() {
         srand(time(0));
         int random = 2 + (rand() % 4);
-        // cout << random;
+        static int totalRandomNum = 0;
+        totalRandomNum = totalRandomNum + random;
+        cout << totalRandomNum;
+        cout << random << '\n';
 
-        flashYPosition = flashYPosition - random;
-        printLayout();
+        if (flashYPosition != 0 && flashXPosition == 1) {
+            if (totalRandomNum >= 7 && flashYPosition != 0) {
+                flashYPosition = flashYPosition - (random - (totalRandomNum - 7));
+                flashXPosition = flashXPosition + (4 * (totalRandomNum - 7));
+            }
+            else {
+                flashYPosition = flashYPosition - random;
+            }        
+            printLayout();
+        }
+        else if (flashYPosition == 0 && flashXPosition == 1) {
+            flashXPosition = flashXPosition + (4 * (totalRandomNum - 7));
+            printLayout();
+        }
+        else if (flashXPosition != 29 && flashYPosition == 0) {
+            if (totalRandomNum >= 14) {
+                flashXPosition = 29;
+                // flashXPosition = flashXPosition + (4 * (totalRandomNum - 14));
+                flashYPosition = flashYPosition + ((totalRandomNum - 14));
+            }
+            else {
+                flashXPosition = flashXPosition + (4 * (14 - totalRandomNum));
+            }
+            printLayout();
+        }
+        else if (flashXPosition == 29 && flashYPosition != 0){
+            flashYPosition = flashYPosition + ((totalRandomNum - 14));
+            printLayout();
+        }
     }
+
+    void startGameInput() {
+        char start;
+        cout << '\n' << "Press Y to start:";
+        cin >> start;
+    if (start == 'Y') {
+        cout << '\n' << '\n';
+        flashStepLayout();
+        cout << '\n' << '\n';
+    }
+    else {
+        cout << "Please enter Y";
+    }
+    }
+
 };
 int main()
 {
+    int i = 0;
     layout l;
     l.printLayout();
-    cout << '\n' << '\n';
-    l.flashStep();
+    while (i < 7) {
+        l.startGameInput();
+        i = i + 1;
+    }
 
     return 0;
 }
