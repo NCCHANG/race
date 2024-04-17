@@ -96,40 +96,39 @@ class layout {
     void flashStepLayout() {
         srand(time(0));
         int random = 2 + (rand() % 4);
-        static int totalRandomNum = 0;
-        totalRandomNum = totalRandomNum + random;
-        cout << totalRandomNum;
+        static int totalBoxMoved = 0;
+        totalBoxMoved = totalBoxMoved + random;
+        cout << totalBoxMoved;
         cout << random << '\n';
 
+        // This is for flash run for the left handside
         if (flashYPosition != 0 && flashXPosition == 1) {
-            if (totalRandomNum >= 7 && flashYPosition != 0) {
-                flashYPosition = flashYPosition - (random - (totalRandomNum - 7));
-                flashXPosition = flashXPosition + (4 * (totalRandomNum - 7));
+            if (totalBoxMoved >= 7 && flashYPosition != 0) {
+                flashYPosition = flashYPosition - (random - (totalBoxMoved - 7));  
+                flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
             }
             else {
                 flashYPosition = flashYPosition - random;
             }        
-            printLayout();
         }
+        // If flash is at top-left
         else if (flashYPosition == 0 && flashXPosition == 1) {
-            flashXPosition = flashXPosition + (4 * (totalRandomNum - 7));
-            printLayout();
+            flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
         }
         else if (flashXPosition != 29 && flashYPosition == 0) {
-            if (totalRandomNum >= 14) {
+            if (totalBoxMoved >= 14) {
                 flashXPosition = 29;
-                // flashXPosition = flashXPosition + (4 * (totalRandomNum - 14));
-                flashYPosition = flashYPosition + ((totalRandomNum - 14));
+                // flashXPosition = flashXPosition + (4 * (totalBoxMoved - 14));
+                flashYPosition = flashYPosition + ((totalBoxMoved - 14));
             }
             else {
-                flashXPosition = flashXPosition + (4 * (14 - totalRandomNum));
+                flashXPosition = flashXPosition + (4 * (14 - totalBoxMoved));
             }
-            printLayout();
         }
         else if (flashXPosition == 29 && flashYPosition != 0){
-            flashYPosition = flashYPosition + ((totalRandomNum - 14));
-            printLayout();
+            flashYPosition = flashYPosition + ((totalBoxMoved - 14));
         }
+        printLayout();
     }
 
     void startGameInput() {
