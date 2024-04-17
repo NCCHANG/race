@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 
@@ -93,7 +94,7 @@ class layout {
 
 
     void flashStep() {
-        srand((unsigned) time(NULL));
+        srand(time(0));
         int random = 2 + (rand() % 4);
         // cout << random;
 
