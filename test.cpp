@@ -10,8 +10,8 @@ char flash = 'f';
 int flashXPosition = 1;
 int flashYPosition = height - 1;
 char superman = 'S';
-int superManXPosition = 3;
-int superManYPosition = height - 1;
+int supermanXPosition = 3;
+int supermanYPosition = height - 1;
 
 int random = 2 + (rand() % 4);
 
@@ -37,7 +37,7 @@ class layout {
                 cout << '|';
             } else if (x == flashXPosition && y == flashYPosition) {
             cout << flash;  
-            } else if (x== superManXPosition && y == superManYPosition)  {
+            } else if (x== supermanXPosition && y == supermanYPosition)  {
             cout << superman;
             } else {
                 cout << ' ';
@@ -49,7 +49,7 @@ class layout {
             cout << '|';
         } else if (x == flashXPosition && y == flashYPosition) {
             cout << flash;    
-        } else if (x== superManXPosition && y == superManYPosition)  {
+        } else if (x== supermanXPosition && y == supermanYPosition)  {
             cout << superman;
         } else {
             cout << ' ';
@@ -94,7 +94,7 @@ class layout {
     }
 };
 
- void flashStepLayout() {
+void flashStepLayout() {
     layout l;
 
     srand(time(0));
@@ -158,6 +158,60 @@ class layout {
     else if (flashYPosition == boxNumEachRow) {
         flashXPosition = flashXPosition - (4 * steps);
     }
+    // l.printLayout();
+}
+
+void supermanStepLayout() {
+    layout l;
+
+    srand(time(0));
+    int steps = 3 + (rand() % 3);
+    static int totalBoxMoved = 0;
+    totalBoxMoved = totalBoxMoved + steps;
+    cout << totalBoxMoved;
+    cout << steps << '\n';
+
+    // This is for superman run from left column to top
+    if (supermanYPosition != 0 && supermanXPosition == 3) {
+        if (totalBoxMoved >= boxNumEachRow && supermanYPosition != 0) {
+            supermanYPosition = supermanYPosition - (steps - (totalBoxMoved - boxNumEachRow));  
+            supermanXPosition = supermanXPosition + (4 * (totalBoxMoved - boxNumEachRow));
+        }
+    // If superman is at left column
+        else {
+            supermanYPosition = supermanYPosition - steps;
+        }        
+    }
+    // If superman is at top row (only enter this else if if superman is at top left box)
+    else if (supermanYPosition == 0 && supermanXPosition == 3) {
+        supermanXPosition = supermanXPosition + (4 * (totalBoxMoved - boxNumEachRow));
+    }
+    // If superman go from top row to right column
+    else if (supermanXPosition != 35 && supermanYPosition == 0) {
+        if (totalBoxMoved >= boxNumEachRow * 2) {
+            supermanXPosition = 35;
+            supermanYPosition = supermanYPosition + (totalBoxMoved - ((boxNumEachRow * 2)));
+        }
+    // If superman is at top row
+        else {
+            supermanXPosition = supermanXPosition + (4 * steps);  // ((boxNumEachRow * 2)  - totalBoxMoved)
+        }
+    }
+    // If superman is from rights column to bottom row
+    else if (supermanXPosition == 35 && supermanYPosition != boxNumEachRow){
+        if (totalBoxMoved >=  boxNumEachRow * 3) {
+            supermanYPosition = supermanYPosition + (steps - (totalBoxMoved - (boxNumEachRow * 3)));
+            supermanXPosition = supermanXPosition - (4 * (totalBoxMoved - (boxNumEachRow * 3)));
+        }
+    // If superman is at right column
+        else {
+            supermanYPosition = supermanYPosition + steps;  // (boxNumEachRow * 3 ) - totalBoxMoved
+        }
+    }
+    // If superman at bottom row
+    else if (supermanYPosition == boxNumEachRow) {
+        supermanXPosition = supermanXPosition - (4 * steps);
+    }
     l.printLayout();
 }
 
@@ -168,6 +222,7 @@ void startGameInput() {
     if (start == 'Y') {
         cout << '\n' << '\n';
         flashStepLayout();
+        supermanStepLayout();
         cout << '\n' << '\n';
     }
     else {
