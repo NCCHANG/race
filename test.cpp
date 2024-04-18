@@ -101,21 +101,6 @@ void flashStepLayout() {
     int steps = 2 + (rand() % 4);
     static int totalBoxMoved = 0;
     totalBoxMoved = totalBoxMoved + steps;
-    cout << totalBoxMoved;
-    cout << steps << '\n';
-
-    // while (flashYPosition != 0 && flashXPosition == 0) {
-    //     if (totalBoxMoved < 7) {
-    //         flashYPosition = flashYPosition - totalBoxMoved;
-    //     }
-    //     else {
-    //         while (flashYPosition == 0)
-    //         if (flashYPosition == 0) {
-    //             flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
-    //         }
-    //     }
-    // }
-
 
     // This is for flash run from left column to top
     if (flashYPosition != 0 && flashXPosition == 1) {
@@ -135,7 +120,7 @@ void flashStepLayout() {
     // If flash go from top row to right column
     else if (flashXPosition != 33 && flashYPosition == 0) {
         if (totalBoxMoved >= boxNumEachRow * 2) {
-            flashXPosition = 33;
+            flashXPosition = width - 4;
             flashYPosition = flashYPosition + (totalBoxMoved - ((boxNumEachRow * 2)));
         }
     // If flash is at top row
@@ -168,8 +153,6 @@ void supermanStepLayout() {
     int steps = 3 + (rand() % 3);
     static int totalBoxMoved = 0;
     totalBoxMoved = totalBoxMoved + steps;
-    cout << totalBoxMoved;
-    cout << steps << '\n';
 
     // This is for superman run from left column to top
     if (supermanYPosition != 0 && supermanXPosition == 3) {
@@ -189,7 +172,7 @@ void supermanStepLayout() {
     // If superman go from top row to right column
     else if (supermanXPosition != 35 && supermanYPosition == 0) {
         if (totalBoxMoved >= boxNumEachRow * 2) {
-            supermanXPosition = 35;
+            supermanXPosition = width - 2;
             supermanYPosition = supermanYPosition + (totalBoxMoved - ((boxNumEachRow * 2)));
         }
     // If superman is at top row
