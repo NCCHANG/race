@@ -1,18 +1,22 @@
 #include <iostream>
-#include <time.h>
 
 using namespace std;
 
+enum Position {UP, DOWN, LEFT, RIGHT};
+
+//configuration
 int height = 8;
 int width = 33;
+
+//flash
 char flash = 'f';
 int flashXPosition = 1;
 int flashYPosition = height - 1;
-char superman = 'S';
-int superManXPosition = 3;
-int superManYPosition = height - 1;
+Position flashPosition = LEFT;
 
-int random = 2 + (rand() % 4);
+//for counting
+int step;
+int flashLocation = 0;
 
 class layout {
     void plusMinus(int x) { //+---+---+ (depends on the x)
@@ -36,8 +40,6 @@ class layout {
                 cout << '|';
             } else if (x == flashXPosition && y == flashYPosition) {
             cout << flash;  
-            } else if (x== superManXPosition && y == superManYPosition)  {
-            cout << superman;
             } else {
                 cout << ' ';
             }
@@ -48,9 +50,7 @@ class layout {
             cout << '|';
         } else if (x == flashXPosition && y == flashYPosition) {
             cout << flash;    
-        } else if (x== superManXPosition && y == superManYPosition)  {
-            cout << superman;
-        } else {
+        }else {
             cout << ' ';
         }
     }
@@ -90,74 +90,63 @@ class layout {
                 }
             }
         }
-    }
+        }
 };
 
- void flashStepLayout() {
-    layout l;
+// move logic section
 
-    srand(time(0));
-    int random = 2 + (rand() % 4); //hx:need to be % 5
-    static int totalBoxMoved = 0;
-    totalBoxMoved = totalBoxMoved + random;
-    cout << totalBoxMoved;
-    cout << random << '\n';
-
-    // This is for flash run for the left top
-    if (flashYPosition != 0 && flashXPosition == 1) {
-        if (totalBoxMoved >= 7 && flashYPosition != 0) {
-            flashYPosition = flashYPosition - (random - (totalBoxMoved - 7));  
-            flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
+void leftTop() {
+    if (flashLocation > 7) {
+        //if it moving from left to top
+        //7 is coordinate of top left
+        while (flashYPosition != 0) { // while it still not at top left yet
+            flashYPosition -= 1;  //move up
+            step -= 1;  //moved 1 step
         }
-        else {
-            flashYPosition = flashYPosition - random;
-        }        
+        flashXPosition += 4 * step; // move right
+        flashPosition = UP;
+    } else { // if it stays at left
+        flashYPosition -= step; //moveup only
     }
-    // If flash is at top
-    else if (flashYPosition == 0 && flashXPosition == 1) {
-        flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
-    }
-    // If flash is at top right
-    else if (flashXPosition != 29 && flashYPosition == 0) {
-        if (totalBoxMoved >= 14) {
-            flashXPosition = 29;
-            // flashXPosition = flashXPosition + (4 * (totalBoxMoved - 14));
-            flashYPosition = flashYPosition + ((totalBoxMoved - 14));
-        }
-        else {
-            flashXPosition = flashXPosition + (4 * (14 - totalBoxMoved));
-        }
-    }
-    // If flash is at rights
-    else if (flashXPosition == 29 && flashYPosition != 0){
-        flashYPosition = flashYPosition + ((totalBoxMoved - 14));
-    }
-    l.printLayout();
 }
 
-void startGameInput() {
-        char start;
-        cout << '\n' << "Press Y to start:";
-        cin >> start;
-    if (start == 'Y') {
-        cout << '\n' << '\n';
-        flashStepLayout();
-        cout << '\n' << '\n';
+void topRight() {
+    if (flashLocation > 14) {
+        //if it moving from top to right
+        //14 is coordinate of top right
+        while (flashXPosition != 29) {
+            flashXPosition += 4; // move right 1 block
+            step -= 1;  //moved 1 step
+        }
+        flashYPosition += step; //move down
+        flashPosition = RIGHT;
+    } else { // if it stays at left
+        flashXPosition += 4 * step; //moveup only
     }
-    else {
-        cout << "Please enter Y";
+}
+
+//
+
+void flashMove()
+{
+    srand(time(0));
+    step = 2 + (rand() % 5); // 2 - 6
+    flashLocation += step;
+    if (flashPosition == LEFT) {
+        leftTop();
+    } else if (flashPosition == UP) {
+        topRight();
     }
+    cout << flashXPosition << ' ' << flashYPosition << ' ' << flashLocation << endl;
 }
 
 int main()
 {
-    int i = 0;
     layout l;
     l.printLayout();
-    while (i < 7) {
-        startGameInput();
-        i = i + 1;
+    while (true){
+        getchar();
+        flashMove();
+        l.printLayout();
     }
-
-    return 0;
 }
