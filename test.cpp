@@ -5,6 +5,7 @@ using namespace std;
 
 int height = 8;
 int width = 33;
+int boxNumEachRow = height - 1;
 char flash = 'f';
 int flashXPosition = 1;
 int flashYPosition = height - 1;
@@ -97,40 +98,65 @@ class layout {
     layout l;
 
     srand(time(0));
-    int random = 2 + (rand() % 4); //hx:need to be % 5
+    int steps = 2 + (rand() % 4);
     static int totalBoxMoved = 0;
-    totalBoxMoved = totalBoxMoved + random;
+    totalBoxMoved = totalBoxMoved + steps;
     cout << totalBoxMoved;
-    cout << random << '\n';
+    cout << steps << '\n';
 
-    // This is for flash run for the left top
+    // while (flashYPosition != 0 && flashXPosition == 0) {
+    //     if (totalBoxMoved < 7) {
+    //         flashYPosition = flashYPosition - totalBoxMoved;
+    //     }
+    //     else {
+    //         while (flashYPosition == 0)
+    //         if (flashYPosition == 0) {
+    //             flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
+    //         }
+    //     }
+    // }
+
+
+    // This is for flash run from left column to top
     if (flashYPosition != 0 && flashXPosition == 1) {
-        if (totalBoxMoved >= 7 && flashYPosition != 0) {
-            flashYPosition = flashYPosition - (random - (totalBoxMoved - 7));  
-            flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
+        if (totalBoxMoved >= boxNumEachRow && flashYPosition != 0) {
+            flashYPosition = flashYPosition - (steps - (totalBoxMoved - boxNumEachRow));  
+            flashXPosition = flashXPosition + (4 * (totalBoxMoved - boxNumEachRow));
         }
+    // If flash is at left column
         else {
-            flashYPosition = flashYPosition - random;
+            flashYPosition = flashYPosition - steps;
         }        
     }
-    // If flash is at top
+    // If flash is at top row (only enter this else if if flash is at top left box)
     else if (flashYPosition == 0 && flashXPosition == 1) {
-        flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
+        flashXPosition = flashXPosition + (4 * (totalBoxMoved - boxNumEachRow));
     }
-    // If flash is at top right
+    // If flash go from top row to right column
     else if (flashXPosition != 29 && flashYPosition == 0) {
-        if (totalBoxMoved >= 14) {
+        if (totalBoxMoved >= boxNumEachRow * 2) {
             flashXPosition = 29;
-            // flashXPosition = flashXPosition + (4 * (totalBoxMoved - 14));
-            flashYPosition = flashYPosition + ((totalBoxMoved - 14));
+            flashYPosition = flashYPosition + (totalBoxMoved - ((boxNumEachRow * 2)));
         }
+    // If flash is at top row
         else {
-            flashXPosition = flashXPosition + (4 * (14 - totalBoxMoved));
+            flashXPosition = flashXPosition + (4 * steps);  // ((boxNumEachRow * 2)  - totalBoxMoved)
         }
     }
-    // If flash is at rights
-    else if (flashXPosition == 29 && flashYPosition != 0){
-        flashYPosition = flashYPosition + ((totalBoxMoved - 14));
+    // If flash is from rights column to bottom row
+    else if (flashXPosition == 29 && flashYPosition != boxNumEachRow){
+        if (totalBoxMoved >=  boxNumEachRow * 3) {
+            flashYPosition = flashYPosition + (steps - (totalBoxMoved - (boxNumEachRow * 3)));
+            flashXPosition = flashXPosition - (4 * (totalBoxMoved - (boxNumEachRow * 3)));
+        }
+    // If flash is at right column
+        else {
+            flashYPosition = flashYPosition + steps;  // (boxNumEachRow * 3 ) - totalBoxMoved
+        }
+    }
+    // If flash at bottom row
+    else if (flashYPosition == boxNumEachRow) {
+        flashXPosition = flashXPosition - (4 * steps);
     }
     l.printLayout();
 }
@@ -154,7 +180,7 @@ int main()
     int i = 0;
     layout l;
     l.printLayout();
-    while (i < 7) {
+    while (i < 10) {
         startGameInput();
         i = i + 1;
     }
