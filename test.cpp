@@ -210,6 +210,7 @@ void startGameInput() {
     }
     else {
         cout << "Please enter Y";
+        return startGameInput();
     }
 }
 
