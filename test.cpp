@@ -3,8 +3,8 @@
 
 using namespace std;
 
-int height = 8;
-int width = 33;
+int height = 9;
+int width = 37;
 int boxNumEachRow = height - 1;
 char flash = 'f';
 int flashXPosition = 1;
@@ -133,9 +133,9 @@ class layout {
         flashXPosition = flashXPosition + (4 * (totalBoxMoved - boxNumEachRow));
     }
     // If flash go from top row to right column
-    else if (flashXPosition != 29 && flashYPosition == 0) {
+    else if (flashXPosition != 33 && flashYPosition == 0) {
         if (totalBoxMoved >= boxNumEachRow * 2) {
-            flashXPosition = 29;
+            flashXPosition = 33;
             flashYPosition = flashYPosition + (totalBoxMoved - ((boxNumEachRow * 2)));
         }
     // If flash is at top row
@@ -144,7 +144,7 @@ class layout {
         }
     }
     // If flash is from rights column to bottom row
-    else if (flashXPosition == 29 && flashYPosition != boxNumEachRow){
+    else if (flashXPosition == 33 && flashYPosition != boxNumEachRow){
         if (totalBoxMoved >=  boxNumEachRow * 3) {
             flashYPosition = flashYPosition + (steps - (totalBoxMoved - (boxNumEachRow * 3)));
             flashXPosition = flashXPosition - (4 * (totalBoxMoved - (boxNumEachRow * 3)));
