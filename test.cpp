@@ -101,7 +101,7 @@ class layout {
         cout << totalBoxMoved;
         cout << random << '\n';
 
-        // This is for flash run for the left handside
+        // This is for flash run for the left top
         if (flashYPosition != 0 && flashXPosition == 1) {
             if (totalBoxMoved >= 7 && flashYPosition != 0) {
                 flashYPosition = flashYPosition - (random - (totalBoxMoved - 7));  
@@ -111,10 +111,11 @@ class layout {
                 flashYPosition = flashYPosition - random;
             }        
         }
-        // If flash is at top-left
+        // If flash is at top
         else if (flashYPosition == 0 && flashXPosition == 1) {
             flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
         }
+        // If flash is at top right
         else if (flashXPosition != 29 && flashYPosition == 0) {
             if (totalBoxMoved >= 14) {
                 flashXPosition = 29;
@@ -125,6 +126,7 @@ class layout {
                 flashXPosition = flashXPosition + (4 * (14 - totalBoxMoved));
             }
         }
+        // If flash is at rights
         else if (flashXPosition == 29 && flashYPosition != 0){
             flashYPosition = flashYPosition + ((totalBoxMoved - 14));
         }
