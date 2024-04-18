@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 
@@ -7,6 +8,7 @@ enum Position {UP, DOWN, LEFT, RIGHT};
 //configuration
 int height = 8;
 int width = 33;
+bool gameRunning = true;
 
 //flash
 char flash = 'f';
@@ -97,7 +99,6 @@ class layout {
 
 void leftTop() {
     if (flashLocation > 7) {
-        //if it moving from left to top
         //7 is coordinate of top left
         while (flashYPosition != 0) { // while it still not at top left yet
             flashYPosition -= 1;  //move up
@@ -112,7 +113,6 @@ void leftTop() {
 
 void topRight() {
     if (flashLocation > 14) {
-        //if it moving from top to right
         //14 is coordinate of top right
         while (flashXPosition != 29) {
             flashXPosition += 4; // move right 1 block
@@ -122,6 +122,37 @@ void topRight() {
         flashPosition = RIGHT;
     } else { // if it stays at left
         flashXPosition += 4 * step; //moveup only
+    }
+}
+
+void rightBottom() {
+    if (flashLocation > 21) {
+        //21 is coordinate of bottom right
+        while (flashYPosition != 7) { // while it still not at bottom right yet
+            flashYPosition += 1;  //move down
+            step -= 1;  //moved 1 step
+        }
+        flashXPosition -= 4 * step; // move left
+        flashPosition = DOWN;
+    } else { // if it stays at right
+        flashYPosition += step; //movedown only
+    }
+}
+
+void bottomLeft() {
+    if (flashLocation > 28) {
+        //28 is coordinate of bottom left
+        while (flashXPosition != 1) { // while it still not at bottom left yet
+            flashXPosition -= 4;  //move left
+            step -= 1;  //moved 1 step
+        }
+        flashYPosition -= step; // move up
+        gameRunning = false;
+    } else if (flashLocation == 28) { //if flash stop at excatly start point
+        flashXPosition -= 4 * step;
+        gameRunning = false;
+    } else { // if it stays at bottom
+        flashXPosition -= 4 * step; //moveleft only
     }
 }
 
@@ -136,15 +167,20 @@ void flashMove()
         leftTop();
     } else if (flashPosition == UP) {
         topRight();
+    } else if (flashPosition == RIGHT) {
+        rightBottom();
+    } else if (flashPosition == DOWN) {
+        bottomLeft();
     }
-    cout << flashXPosition << ' ' << flashYPosition << ' ' << flashLocation << endl;
+    cout << flashXPosition << ' ' << flashYPosition << ' ' << 
+    flashPosition <<' ' <<flashLocation << endl;
 }
 
 int main()
 {
     layout l;
     l.printLayout();
-    while (true){
+    while (gameRunning){
         getchar();
         flashMove();
         l.printLayout();
