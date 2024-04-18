@@ -91,49 +91,51 @@ class layout {
             }
         }
     }
+};
 
+ void flashStepLayout() {
+    layout l;
 
-    void flashStepLayout() {
-        srand(time(0));
-        int random = 2 + (rand() % 4);
-        static int totalBoxMoved = 0;
-        totalBoxMoved = totalBoxMoved + random;
-        cout << totalBoxMoved;
-        cout << random << '\n';
+    srand(time(0));
+    int random = 2 + (rand() % 4);
+    static int totalBoxMoved = 0;
+    totalBoxMoved = totalBoxMoved + random;
+    cout << totalBoxMoved;
+    cout << random << '\n';
 
-        // This is for flash run for the left top
-        if (flashYPosition != 0 && flashXPosition == 1) {
-            if (totalBoxMoved >= 7 && flashYPosition != 0) {
-                flashYPosition = flashYPosition - (random - (totalBoxMoved - 7));  
-                flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
-            }
-            else {
-                flashYPosition = flashYPosition - random;
-            }        
-        }
-        // If flash is at top
-        else if (flashYPosition == 0 && flashXPosition == 1) {
+    // This is for flash run for the left top
+    if (flashYPosition != 0 && flashXPosition == 1) {
+        if (totalBoxMoved >= 7 && flashYPosition != 0) {
+            flashYPosition = flashYPosition - (random - (totalBoxMoved - 7));  
             flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
         }
-        // If flash is at top right
-        else if (flashXPosition != 29 && flashYPosition == 0) {
-            if (totalBoxMoved >= 14) {
-                flashXPosition = 29;
-                // flashXPosition = flashXPosition + (4 * (totalBoxMoved - 14));
-                flashYPosition = flashYPosition + ((totalBoxMoved - 14));
-            }
-            else {
-                flashXPosition = flashXPosition + (4 * (14 - totalBoxMoved));
-            }
-        }
-        // If flash is at rights
-        else if (flashXPosition == 29 && flashYPosition != 0){
+        else {
+            flashYPosition = flashYPosition - random;
+        }        
+    }
+    // If flash is at top
+    else if (flashYPosition == 0 && flashXPosition == 1) {
+        flashXPosition = flashXPosition + (4 * (totalBoxMoved - 7));
+    }
+    // If flash is at top right
+    else if (flashXPosition != 29 && flashYPosition == 0) {
+        if (totalBoxMoved >= 14) {
+            flashXPosition = 29;
+            // flashXPosition = flashXPosition + (4 * (totalBoxMoved - 14));
             flashYPosition = flashYPosition + ((totalBoxMoved - 14));
         }
-        printLayout();
+        else {
+            flashXPosition = flashXPosition + (4 * (14 - totalBoxMoved));
+        }
     }
+    // If flash is at rights
+    else if (flashXPosition == 29 && flashYPosition != 0){
+        flashYPosition = flashYPosition + ((totalBoxMoved - 14));
+    }
+    l.printLayout();
+}
 
-    void startGameInput() {
+void startGameInput() {
         char start;
         cout << '\n' << "Press Y to start:";
         cin >> start;
@@ -145,16 +147,15 @@ class layout {
     else {
         cout << "Please enter Y";
     }
-    }
+}
 
-};
 int main()
 {
     int i = 0;
     layout l;
     l.printLayout();
     while (i < 7) {
-        l.startGameInput();
+        startGameInput();
         i = i + 1;
     }
 
