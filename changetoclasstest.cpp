@@ -1,40 +1,30 @@
-//FAILED LOLLLLLLLLLLLLL IGNORE DIS
-
 #include <iostream>
 #include <time.h>
 
 using namespace std;
 
-enum Position {UP, DOWN, LEFT, RIGHT};
-
 //configuration
-int height = 8;
-int width = 33;
+int height = 3;
+int width = 17;
 bool gameRunning = true;
+int box = 10;
+int topRightCoordinate = 5;
+int botRightCoordinate = 7;
+int topLeftCoordinate = 2;
 
-//racer
-racerClass flash('f',1);
-racerClass superman('s',3);
+//flash
+char flash = 'f';
+int flashXPosition = 1;
+int flashYPosition = height - 1;
+
+char superman = 's';
+int supermanXPosition = 3;
+int supermanYPosition = height - 1;
 
 //for counting
 int step;
-
-class racerClass {
-    public:
-    char object;
-    int xPosition;
-    int yPosition;
-    int location;
-    Position side;
-
-    racerClass(char obj, int x, int y = height-1, int location = 0, Position side = LEFT) {
-        object = obj;
-        xPosition = x;
-        yPosition = y;
-        location = location;
-        side = side;
-    }
-};
+int flashLocation = 0;
+int supermanLocation = 0;
 
 class layout {
     void plusMinus(int x) { //+---+---+ (depends on the x)
@@ -56,9 +46,11 @@ class layout {
     void straightLineBorder (int x, int y) { //|   |   |   |   |   |   |   | (depends on the x)
         if (x%4 == 0) {
                 cout << '|';
-            } else if (x == superman.x && y == superman.y) {
-            cout << superman.obj;  
-            } else {
+            } else if (x == flashXPosition && y == flashYPosition) {
+            cout << flash;  
+            } else if (x == supermanXPosition && y == supermanYPosition) {
+            cout << superman; }
+            else {
                 cout << ' ';
             }
     }
@@ -66,9 +58,11 @@ class layout {
     void straightLineNotBorder (int x, int y) { //|   |                |   | (depends on x)
         if ( x==0 || x==4 || x==width - 5 || x==width - 1) {
             cout << '|';
-        } else if (x == superman.x && y == superman.y) {
-            cout << superman.obj;    
-        }else {
+        } else if (x == flashXPosition && y == flashYPosition) {
+            cout << flash;    
+        } else if (x == supermanXPosition && y == supermanYPosition) {
+            cout << superman; }
+        else {
             cout << ' ';
         }
     }
@@ -111,113 +105,104 @@ class layout {
         }
 };
 
-// move logic section
+void logic(int coordinateX, int location, int &racerX, int &racerY, int coordinateY = height - 1) {
+    int coordinate = 0;
+    while (coordinate < box) {
+    if (coordinate >= topLeftCoordinate && coordinate < topRightCoordinate){
+        coordinateX += 4;
+    } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
+        coordinateY += 1;
+    }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
+        coordinateX -= 4;
+    } else if (coordinate < topLeftCoordinate){
+        coordinateY -= 1;
+    }
+    
+    coordinate ++;
 
-void leftTop(racerClass racer) {
-    if (racer.location > 7) {
-        //7 is coordinate of top left
-        while (racer.yPosition != 0) { // while it still not at top left yet
-            racer.yPosition -= 1;  //move up
-            step -= 1;  //moved 1 step
-        }
-        racer.xPosition += 4 * step; // move right
-        racer.side = UP;
-    } else { // if it stays at left
-        racer.yPosition -= step; //moveup only
+    if (location == coordinate) {
+        racerX = coordinateX;
+        racerY = coordinateY;
+        break;
+    }
     }
 }
 
-void topRight(racerClass racer) {
-    if (racer.location > 14) {
-        //14 is coordinate of top right
-        while (racer.xPosition < 28) {
-            racer.xPosition += 4; // move right 1 block
-            step -= 1;  //moved 1 step
-        }
-        racer.yPosition += step; //move down
-        racer.side = RIGHT;
-    } else { // if it stays at left
-        racer.xPosition += 4 * step; //moveup only
+void box_inquiry() {
+    int boxExtraNeeded;
+    cout << "How many block do you need? (minimum 10 box and must be even number):" ;
+    cin >> box;
+    if (box % 2 != 0 || box < 10){
+        cout << "Please enter a valid block amount!" << endl;
+        box_inquiry();
     }
+    boxExtraNeeded = box - 10;
+    while (boxExtraNeeded > 0) {
+        height += 1;   // expand verticcal
+        boxExtraNeeded -= 2;
+
+        topLeftCoordinate ++;
+        topRightCoordinate ++;
+        botRightCoordinate += 2;
+
+        if (boxExtraNeeded > 0) { 
+            width += 4;  //(1 box = 4width (up and down)) expand horizontal
+            boxExtraNeeded -= 2;
+
+            topRightCoordinate ++;
+            botRightCoordinate ++;
+        }
+    }
+    flashYPosition = height - 1;
+    supermanYPosition = height - 1;
 }
 
-void rightBottom(racerClass racer) {
-    if (racer.location > 21) {
-        //21 is coordinate of bottom right
-        while (racer.yPosition != 7) { // while it still not at bottom right yet
-            racer.yPosition += 1;  //move down
-            step -= 1;  //moved 1 step
-        }
-        racer.xPosition -= 4 * step; // move left
-        racer.side = DOWN;
-    } else { // if it stays at right
-        racer.yPosition += step; //movedown only
-    }
-}
-
-void bottomLeft(racerClass racer) {
-    if (racer.location > 28) {
-        //28 is coordinate of bottom left
-        while (racer.xPosition > 4) { // while it still not at bottom left yet
-            racer.xPosition -= 4;  //move left
-            step -= 1;  //moved 1 step
-        }
-        racer.yPosition -= step; // move up
+void checkGameCondition()
+{
+    if (flashLocation > box) {
+        cout << endl << "Flash Won!";
         gameRunning = false;
-    } else if (racer.location == 28) { //if flash stop at excatly start point
-        racer.xPosition -= 4 * step;
+    } else if (supermanLocation > box) {
+        cout << endl << "Superman Won!";
         gameRunning = false;
-    } else { // if it stays at bottom
-        racer.xPosition -= 4 * step; //moveleft only
     }
 }
-
-//
 
 void flashMove()
 {
     srand(time(0));
     step = 2 + (rand() % 5); // 2 - 6
-    flash.location += step;
-    if (flash.side == LEFT) {
-        leftTop(flash);
-    } else if (flash.side == UP) {
-        topRight(flash);
-    } else if (flash.side == RIGHT) {
-        rightBottom(flash);
-    } else if (flash.side == DOWN) {
-        bottomLeft(flash);
-    }
-    cout << flash.xPosition << ' ' << flash.yPosition << ' ' << 
-    flash.side <<' ' <<flash.location << endl;
+    flashLocation += step;
+    
+    logic(1,flashLocation,flashXPosition,flashYPosition);
 }
 
 void supermanMove()
 {
     srand(time(0));
-    step = 2 + (rand() % 5); // 2 - 6
-    superman.location += step;
-    if (superman.side == LEFT) {
-        leftTop(superman);
-    } else if (superman.side == UP) {
-        topRight(superman);
-    } else if (superman.side == RIGHT) {
-        rightBottom(superman);
-    } else if (superman.side == DOWN) {
-        bottomLeft(superman);
-    }
-    cout << superman.xPosition << ' ' << superman.yPosition << ' ' << 
-    superman.side <<' ' <<superman.location << endl;
+    step = 3 + (rand() % 3); //3 - 5
+    supermanLocation += step;
+    
+    logic(3,supermanLocation,supermanXPosition,supermanYPosition);
 }
 
 int main()
 {
+    string confirmation;
     layout l;
+    box_inquiry();
     l.printLayout();
-    while (gameRunning){
-        getchar();
-        system("CLS");
+    while (gameRunning) {
+        do {
+            cout << endl <<"press y to run: ";
+            cin >> confirmation;
+        } while (confirmation != "y");
+
+        flashMove();
         supermanMove();
         l.printLayout();
+        checkGameCondition();
     }
+    cout << endl;
+    system("pause");
 }
