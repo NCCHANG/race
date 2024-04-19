@@ -6,20 +6,24 @@ using namespace std;
 //configuration
 int height = 3;
 int width = 17;
-bool gameRunning = true;
+
 int box = 10;
 int topRightCoordinate = 5;
 int botRightCoordinate = 7;
 int topLeftCoordinate = 2;
 
+bool gameRunning = true;
+
 //flash
 char flash = 'f';
 int flashXPosition = 1;
 int flashYPosition = height - 1;
+int flashRoundLeft = 2;
 
 char superman = 's';
 int supermanXPosition = 3;
 int supermanYPosition = height - 1;
+int supermanRoundLeft = 2;
 
 //for counting
 int step;
@@ -105,27 +109,55 @@ class layout {
         }
 };
 
-void logic(int coordinateX, int location, int &racerX, int &racerY, int coordinateY = height - 1) {
+void checkWinner()
+{
+    if (flashLocation >= box) {
+        cout << endl << "Flash Won!" << endl;
+        gameRunning = false;
+    } else if (supermanLocation >= box) {
+        cout << endl << "Superman Won!" << endl;
+        gameRunning = false;
+    }
+}
+
+void logic(int coordinateX, int &location, int &racerX, int &racerY,
+            int &roundLeft, int coordinateY = height - 1) {
     int coordinate = 0;
-    while (coordinate < box) {
-    if (coordinate >= topLeftCoordinate && coordinate < topRightCoordinate){
-        coordinateX += 4;
-    } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
-        coordinateY += 1;
-    }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
-        coordinateX -= 4;
-    } else if (coordinate < topLeftCoordinate){
-        coordinateY -= 1;
+    int ox = coordinateX;
+    int oy = coordinateY;
+
+    //check if round end
+    if (location >= box && roundLeft != 1) {
+        location -= box;
+        roundLeft -= 1;
+    } else if (location >= box && roundLeft == 1) {
+        racerX = ox;
+        racerY = oy;
+        checkWinner();
+    }
+    //getting x and y for the coordination
+    while (coordinate < box && location < box) {
+
+        if (location == coordinate) {
+            racerX = coordinateX;
+            racerY = coordinateY;
+            break;
+        }
+
+        if (coordinate >= topLeftCoordinate && coordinate < topRightCoordinate){
+            coordinateX += 4;
+        } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
+            coordinateY += 1;
+        }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
+            coordinateX -= 4;
+        } else if (coordinate < topLeftCoordinate){
+            coordinateY -= 1;
+        }
+        
+        coordinate ++;
+
     }
     
-    coordinate ++;
-
-    if (location == coordinate) {
-        racerX = coordinateX;
-        racerY = coordinateY;
-        break;
-    }
-    }
 }
 
 void box_inquiry() {
@@ -157,15 +189,14 @@ void box_inquiry() {
     supermanYPosition = height - 1;
 }
 
-void checkGameCondition()
-{
-    if (flashLocation > box) {
-        cout << endl << "Flash Won!";
-        gameRunning = false;
-    } else if (supermanLocation > box) {
-        cout << endl << "Superman Won!";
-        gameRunning = false;
-    }
+void round_inquiry() {
+    int num_of_round;
+    do {
+        cout << "Number of Round: ";
+        cin >> num_of_round;
+    } while (num_of_round < 1);
+    flashRoundLeft = num_of_round;
+    supermanRoundLeft = num_of_round;
 }
 
 void flashMove()
@@ -173,8 +204,9 @@ void flashMove()
     srand(time(0));
     step = 2 + (rand() % 5); // 2 - 6
     flashLocation += step;
+    cout << endl << "Flash move " << step << "steps." << endl;
     
-    logic(1,flashLocation,flashXPosition,flashYPosition);
+    logic(1,flashLocation,flashXPosition,flashYPosition,flashRoundLeft);
 }
 
 void supermanMove()
@@ -182,8 +214,9 @@ void supermanMove()
     srand(time(0));
     step = 3 + (rand() % 3); //3 - 5
     supermanLocation += step;
+    cout << "Superman move " << step << "steps." << endl;
     
-    logic(3,supermanLocation,supermanXPosition,supermanYPosition);
+    logic(3,supermanLocation,supermanXPosition,supermanYPosition,supermanRoundLeft);
 }
 
 int main()
@@ -191,9 +224,12 @@ int main()
     string confirmation;
     layout l;
     box_inquiry();
+    round_inquiry();
     l.printLayout();
     while (gameRunning) {
         do {
+            cout << endl << "Flash: " << flashRoundLeft << " rounds left.";
+            cout << endl << "Superman: " << supermanRoundLeft << " rounds left.";
             cout << endl <<"press y to run: ";
             cin >> confirmation;
         } while (confirmation != "y");
@@ -201,7 +237,6 @@ int main()
         flashMove();
         supermanMove();
         l.printLayout();
-        checkGameCondition();
     }
     cout << endl;
     system("pause");
