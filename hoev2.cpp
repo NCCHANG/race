@@ -16,9 +16,15 @@ int flashXPosition = 1;
 int flashYPosition = height - 1;
 Position flashPosition = LEFT;
 
+char superman = 's';
+int supermanXPosition = 3;
+int supermanYPosition = height - 1;
+Position supermanPosition = LEFT;
+
 //for counting
 int step;
 int flashLocation = 0;
+int supermanLocation = 0;
 
 class layout {
     void plusMinus(int x) { //+---+---+ (depends on the x)
@@ -42,7 +48,9 @@ class layout {
                 cout << '|';
             } else if (x == flashXPosition && y == flashYPosition) {
             cout << flash;  
-            } else {
+            } else if (x == supermanXPosition && y == supermanYPosition) {
+            cout << superman; }
+            else {
                 cout << ' ';
             }
     }
@@ -52,7 +60,9 @@ class layout {
             cout << '|';
         } else if (x == flashXPosition && y == flashYPosition) {
             cout << flash;    
-        }else {
+        } else if (x == supermanXPosition && y == supermanYPosition) {
+            cout << superman; }
+        else {
             cout << ' ';
         }
     }
@@ -114,7 +124,7 @@ void leftTop() {
 void topRight() {
     if (flashLocation > 14) {
         //14 is coordinate of top right
-        while (flashXPosition != 29) {
+        while (flashXPosition < 28) {
             flashXPosition += 4; // move right 1 block
             step -= 1;  //moved 1 step
         }
@@ -142,7 +152,7 @@ void rightBottom() {
 void bottomLeft() {
     if (flashLocation > 28) {
         //28 is coordinate of bottom left
-        while (flashXPosition != 1) { // while it still not at bottom left yet
+        while (flashXPosition  > 4) { // while it still not at bottom left yet
             flashXPosition -= 4;  //move left
             step -= 1;  //moved 1 step
         }
@@ -153,6 +163,67 @@ void bottomLeft() {
         gameRunning = false;
     } else { // if it stays at bottom
         flashXPosition -= 4 * step; //moveleft only
+    }
+}
+
+///
+
+void sleftTop() {
+    if (supermanLocation > 7) {
+        //7 is coordinate of top left
+        while (supermanYPosition != 0) { // while it still not at top left yet
+            supermanYPosition -= 1;  //move up
+            step -= 1;  //moved 1 step
+        }
+        supermanXPosition += 4 * step; // move right
+        supermanPosition = UP;
+    } else { // if it stays at left
+        supermanYPosition -= step; //moveup only
+    }
+}
+
+void stopRight() {
+    if (supermanLocation > 14) {
+        //14 is coordinate of top right
+        while (supermanXPosition < 28) {
+            supermanXPosition += 4; // move right 1 block
+            step -= 1;  //moved 1 step
+        }
+        supermanYPosition += step; //move down
+        supermanPosition = RIGHT;
+    } else { // if it stays at left
+        supermanXPosition += 4 * step; //moveup only
+    }
+}
+
+void srightBottom() {
+    if (supermanLocation > 21) {
+        //21 is coordinate of bottom right
+        while (supermanYPosition != 7) { // while it still not at bottom right yet
+            supermanYPosition += 1;  //move down
+            step -= 1;  //moved 1 step
+        }
+        supermanXPosition -= 4 * step; // move left
+        supermanPosition = DOWN;
+    } else { // if it stays at right
+        supermanYPosition += step; //movedown only
+    }
+}
+
+void sbottomLeft() {
+    if (supermanLocation > 28) {
+        //28 is coordinate of bottom left
+        while (supermanXPosition  > 4) { // while it still not at bottom left yet
+            supermanXPosition -= 4;  //move left
+            step -= 1;  //moved 1 step
+        }
+        supermanYPosition -= step; // move up
+        gameRunning = false;
+    } else if (supermanLocation == 28) { //if superman stop at excatly start point
+        supermanXPosition -= 4 * step;
+        gameRunning = false;
+    } else { // if it stays at bottom
+        supermanXPosition -= 4 * step; //moveleft only
     }
 }
 
@@ -176,6 +247,24 @@ void flashMove()
     flashPosition <<' ' <<flashLocation << endl;
 }
 
+void supermanMove()
+{
+    srand(time(0));
+    step = 3 + (rand() % 3); //3 - 5
+    supermanLocation += step;
+    if (supermanPosition == LEFT) {
+        sleftTop();
+    } else if (supermanPosition == UP) {
+        stopRight();
+    } else if (supermanPosition == RIGHT) {
+        srightBottom();
+    } else if (supermanPosition == DOWN) {
+        sbottomLeft();
+    }
+    cout << supermanXPosition << ' ' << supermanYPosition << ' ' << 
+    supermanPosition <<' ' <<supermanLocation << endl;
+}
+
 int main()
 {
     layout l;
@@ -183,6 +272,7 @@ int main()
     while (gameRunning){
         getchar();
         flashMove();
+        supermanMove();
         l.printLayout();
     }
 }
