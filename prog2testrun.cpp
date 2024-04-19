@@ -108,8 +108,8 @@ class layout {
 // move logic section
 
 void leftTop() {
-    if (flashLocation > 8) {
-        //8 is coordinate of top left
+    if (flashLocation > 7) {
+        //7 is coordinate of top left
         while (flashYPosition != 0) { // while it still not at top left yet
             flashYPosition -= 1;  //move up
             step -= 1;  //moved 1 step
@@ -122,9 +122,9 @@ void leftTop() {
 }
 
 void topRight() {
-    if (flashLocation > 16) {
-        //16 is coordinate of top right
-        while (flashXPosition < 32) {
+    if (flashLocation > 14) {
+        //14 is coordinate of top right
+        while (flashXPosition < 28) {
             flashXPosition += 4; // move right 1 block
             step -= 1;  //moved 1 step
         }
@@ -136,9 +136,9 @@ void topRight() {
 }
 
 void rightBottom() {
-    if (flashLocation > 24) {
-        //24 is coordinate of bottom right
-        while (flashYPosition != 8) { // while it still not at bottom right yet
+    if (flashLocation > 21) {
+        //21 is coordinate of bottom right
+        while (flashYPosition != 7) { // while it still not at bottom right yet
             flashYPosition += 1;  //move down
             step -= 1;  //moved 1 step
         }
@@ -150,15 +150,15 @@ void rightBottom() {
 }
 
 void bottomLeft() {
-    if (flashLocation > 32) {
-        //32 is coordinate of bottom left
+    if (flashLocation > 28) {
+        //28 is coordinate of bottom left
         while (flashXPosition  > 4) { // while it still not at bottom left yet
             flashXPosition -= 4;  //move left
             step -= 1;  //moved 1 step
         }
         flashYPosition -= step; // move up
         gameRunning = false;
-    } else if (flashLocation == 32) { //if flash stop at excatly start point
+    } else if (flashLocation == 28) { //if flash stop at excatly start point
         flashXPosition -= 4 * step;
         gameRunning = false;
     } else { // if it stays at bottom
@@ -169,8 +169,8 @@ void bottomLeft() {
 ///
 
 void sleftTop() {
-    if (supermanLocation > 8) {
-        //8 is coordinate of top left
+    if (supermanLocation > 7) {
+        //7 is coordinate of top left
         while (supermanYPosition != 0) { // while it still not at top left yet
             supermanYPosition -= 1;  //move up
             step -= 1;  //moved 1 step
@@ -183,9 +183,9 @@ void sleftTop() {
 }
 
 void stopRight() {
-    if (supermanLocation > 16) {
-        //16 is coordinate of top right
-        while (supermanXPosition < 32) {
+    if (supermanLocation > 14) {
+        //14 is coordinate of top right
+        while (supermanXPosition < 28) {
             supermanXPosition += 4; // move right 1 block
             step -= 1;  //moved 1 step
         }
@@ -197,9 +197,9 @@ void stopRight() {
 }
 
 void srightBottom() {
-    if (supermanLocation > 24) {
-        //24 is coordinate of bottom right
-        while (supermanYPosition != 8) { // while it still not at bottom right yet
+    if (supermanLocation > 21) {
+        //21 is coordinate of bottom right
+        while (supermanYPosition != 7) { // while it still not at bottom right yet
             supermanYPosition += 1;  //move down
             step -= 1;  //moved 1 step
         }
@@ -211,8 +211,8 @@ void srightBottom() {
 }
 
 void sbottomLeft() {
-    if (supermanLocation > 32) {
-        //32 is coordinate of bottom left
+    if (supermanLocation > 28) {
+        //28 is coordinate of bottom left
         while (supermanXPosition  > 4) { // while it still not at bottom left yet
             supermanXPosition -= 4;  //move left
             step -= 1;  //moved 1 step
