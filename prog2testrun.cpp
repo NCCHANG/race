@@ -6,20 +6,24 @@ using namespace std;
 enum Position {UP, DOWN, LEFT, RIGHT};
 
 //configuration
-int height = 9;
-int width = 37;
+int height = 3;
+int width = 17;
 bool gameRunning = true;
+int box = 10;
+int topRightCoordinate = 5;
+int botRightCoordinate = 7;
+int topLeftCoordinate = 2;
 
 //flash
 char flash = 'f';
 int flashXPosition = 1;
 int flashYPosition = height - 1;
-Position flashPosition = LEFT;
+Position flashSide = LEFT;
 
 char superman = 's';
 int supermanXPosition = 3;
 int supermanYPosition = height - 1;
-Position supermanPosition = LEFT;
+Position supermanSide = LEFT;
 
 //for counting
 int step;
@@ -108,57 +112,53 @@ class layout {
 // move logic section
 
 void leftTop() {
-    if (flashLocation > 7) {
-        //7 is coordinate of top left
+    if (flashLocation > topLeftCoordinate) { // if it will turn
         while (flashYPosition != 0) { // while it still not at top left yet
             flashYPosition -= 1;  //move up
-            step -= 1;  //moved 1 step
+            step -= 1;
         }
         flashXPosition += 4 * step; // move right
-        flashPosition = UP;
+        flashSide = UP;
     } else { // if it stays at left
         flashYPosition -= step; //moveup only
     }
 }
 
 void topRight() {
-    if (flashLocation > 14) {
-        //14 is coordinate of top right
-        while (flashXPosition < 28) {
+    if (flashLocation > topRightCoordinate) { // if it will turn
+        while (flashXPosition < (width - 5)) { // // while it still not at top right yet
             flashXPosition += 4; // move right 1 block
-            step -= 1;  //moved 1 step
+            step -= 1;
         }
         flashYPosition += step; //move down
-        flashPosition = RIGHT;
+        flashSide = RIGHT;
     } else { // if it stays at left
         flashXPosition += 4 * step; //moveup only
     }
 }
 
 void rightBottom() {
-    if (flashLocation > 21) {
-        //21 is coordinate of bottom right
-        while (flashYPosition != 7) { // while it still not at bottom right yet
+    if (flashLocation > botRightCoordinate) { // if it will turn
+        while (flashYPosition != height - 1) { // while it still not at bottom right yet
             flashYPosition += 1;  //move down
-            step -= 1;  //moved 1 step
+            step -= 1;
         }
         flashXPosition -= 4 * step; // move left
-        flashPosition = DOWN;
+        flashSide = DOWN;
     } else { // if it stays at right
         flashYPosition += step; //movedown only
     }
 }
 
 void bottomLeft() {
-    if (flashLocation > 28) {
-        //28 is coordinate of bottom left
+    if (flashLocation > box) { // if it will turn
         while (flashXPosition  > 4) { // while it still not at bottom left yet
             flashXPosition -= 4;  //move left
-            step -= 1;  //moved 1 step
+            step -= 1;
         }
         flashYPosition -= step; // move up
         gameRunning = false;
-    } else if (flashLocation == 28) { //if flash stop at excatly start point
+    } else if (flashLocation == box) { //if flash stop at excatly start point
         flashXPosition -= 4 * step;
         gameRunning = false;
     } else { // if it stays at bottom
@@ -169,57 +169,53 @@ void bottomLeft() {
 ///
 
 void sleftTop() {
-    if (supermanLocation > 7) {
-        //7 is coordinate of top left
+    if (supermanLocation > topLeftCoordinate) { // if it will turn
         while (supermanYPosition != 0) { // while it still not at top left yet
             supermanYPosition -= 1;  //move up
-            step -= 1;  //moved 1 step
+            step -= 1;
         }
         supermanXPosition += 4 * step; // move right
-        supermanPosition = UP;
+        supermanSide = UP;
     } else { // if it stays at left
         supermanYPosition -= step; //moveup only
     }
 }
 
 void stopRight() {
-    if (supermanLocation > 14) {
-        //14 is coordinate of top right
-        while (supermanXPosition < 28) {
+    if (supermanLocation > topRightCoordinate) { // if it will turn
+        while (supermanXPosition < (width - 5)) { // // while it still not at top right yet
             supermanXPosition += 4; // move right 1 block
-            step -= 1;  //moved 1 step
+            step -= 1;
         }
         supermanYPosition += step; //move down
-        supermanPosition = RIGHT;
+        supermanSide = RIGHT;
     } else { // if it stays at left
         supermanXPosition += 4 * step; //moveup only
     }
 }
 
 void srightBottom() {
-    if (supermanLocation > 21) {
-        //21 is coordinate of bottom right
-        while (supermanYPosition != 7) { // while it still not at bottom right yet
+    if (supermanLocation > botRightCoordinate) { // if it will turn
+        while (supermanYPosition != (height - 1)) { // while it still not at bottom right yet
             supermanYPosition += 1;  //move down
-            step -= 1;  //moved 1 step
+            step -= 1;
         }
         supermanXPosition -= 4 * step; // move left
-        supermanPosition = DOWN;
+        supermanSide = DOWN;
     } else { // if it stays at right
         supermanYPosition += step; //movedown only
     }
 }
 
 void sbottomLeft() {
-    if (supermanLocation > 28) {
-        //28 is coordinate of bottom left
+    if (supermanLocation > box) { // if it will turn
         while (supermanXPosition  > 4) { // while it still not at bottom left yet
             supermanXPosition -= 4;  //move left
-            step -= 1;  //moved 1 step
+            step -= 1;
         }
         supermanYPosition -= step; // move up
         gameRunning = false;
-    } else if (supermanLocation == 28) { //if superman stop at excatly start point
+    } else if (supermanLocation == box) { //if superman stop at excatly start point
         supermanXPosition -= 4 * step;
         gameRunning = false;
     } else { // if it stays at bottom
@@ -234,17 +230,16 @@ void flashMove()
     srand(time(0));
     step = 2 + (rand() % 5); // 2 - 6
     flashLocation += step;
-    if (flashPosition == LEFT) {
+    if (flashSide == LEFT) {
         leftTop();
-    } else if (flashPosition == UP) {
+    } else if (flashSide == UP) {
         topRight();
-    } else if (flashPosition == RIGHT) {
+    } else if (flashSide == RIGHT) {
         rightBottom();
-    } else if (flashPosition == DOWN) {
+    } else if (flashSide == DOWN) {
         bottomLeft();
     }
-    cout << flashXPosition << ' ' << flashYPosition << ' ' << 
-    flashPosition <<' ' <<flashLocation << endl;
+    cout << flashXPosition << ' ' << flashYPosition << ' ' <<flashLocation << endl;
 }
 
 void supermanMove()
@@ -252,22 +247,48 @@ void supermanMove()
     srand(time(0));
     step = 3 + (rand() % 3); //3 - 5
     supermanLocation += step;
-    if (supermanPosition == LEFT) {
+    if (supermanSide == LEFT) {
         sleftTop();
-    } else if (supermanPosition == UP) {
+    } else if (supermanSide == UP) {
         stopRight();
-    } else if (supermanPosition == RIGHT) {
+    } else if (supermanSide == RIGHT) {
         srightBottom();
-    } else if (supermanPosition == DOWN) {
+    } else if (supermanSide == DOWN) {
         sbottomLeft();
     }
-    cout << supermanXPosition << ' ' << supermanYPosition << ' ' << 
-    supermanPosition <<' ' <<supermanLocation << endl;
+    cout << supermanXPosition << ' ' << supermanYPosition << ' '<<' ' <<supermanLocation << endl;
+}
+
+void tobename() {
+    int boxExtraNeeded;
+    cin >> box;
+    boxExtraNeeded = box - 10;
+    while (boxExtraNeeded > 0) {
+        height += 1;   // expand verticcal
+        boxExtraNeeded -= 2;
+
+        topLeftCoordinate ++;
+        topRightCoordinate ++;
+        botRightCoordinate += 2;
+
+        if (boxExtraNeeded > 0) { 
+            width += 4;  //(1 box = 4width (up and down)) expand horizontal
+            boxExtraNeeded -= 2;
+
+            topRightCoordinate ++;
+            botRightCoordinate ++;
+        }
+    }
+    flashYPosition = height - 1;
+    supermanYPosition = height - 1;
+
+    cout << topLeftCoordinate << topRightCoordinate << botRightCoordinate << endl;
 }
 
 int main()
 {
     layout l;
+    tobename();
     l.printLayout();
     while (gameRunning){
         getchar();
