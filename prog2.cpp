@@ -18,12 +18,12 @@ bool gameRunning = true;
 char flash = 'f';
 int flashXPosition = 1;
 int flashYPosition = height - 1;
-int flashRoundLeft = 2;
+int flashLapLeft = 2;
 
 char superman = 's';
 int supermanXPosition = 3;
 int supermanYPosition = height - 1;
-int supermanRoundLeft = 2;
+int supermanLapLeft = 2;
 
 //for counting
 int step;
@@ -189,14 +189,14 @@ void box_inquiry() {
     supermanYPosition = height - 1;
 }
 
-void round_inquiry() { // round change to lap
-    int num_of_round;
+void lap_inquiry() {
+    int num_of_lap;
     do {
-        cout << "Number of Round: ";
-        cin >> num_of_round;
-    } while (num_of_round < 1);
-    flashRoundLeft = num_of_round;
-    supermanRoundLeft = num_of_round;
+        cout << "Number of Lap: ";
+        cin >> num_of_lap;
+    } while (num_of_lap < 1);
+    flashLapLeft = num_of_lap;
+    supermanLapLeft = num_of_lap;
 }
 
 void flashMove()
@@ -204,9 +204,9 @@ void flashMove()
     srand(time(0));
     step = 2 + (rand() % 5); // 2 - 6
     flashLocation += step;
-    cout << endl << "Flash move " << step << "steps." << endl;
+    cout << endl << "Flash move " << step << " steps." << endl;
     
-    logic(1,flashLocation,flashXPosition,flashYPosition,flashRoundLeft);
+    logic(1,flashLocation,flashXPosition,flashYPosition,flashLapLeft);
 }
 
 void supermanMove()
@@ -214,9 +214,9 @@ void supermanMove()
     srand(time(0));
     step = 3 + (rand() % 3); //3 - 5
     supermanLocation += step;
-    cout << "Superman move " << step << "steps." << endl;
+    cout << "Superman move " << step << " steps." << endl;
     
-    logic(3,supermanLocation,supermanXPosition,supermanYPosition,supermanRoundLeft);
+    logic(3,supermanLocation,supermanXPosition,supermanYPosition,supermanLapLeft);
 }
 
 int main()
@@ -224,12 +224,12 @@ int main()
     string confirmation;
     layout l;
     box_inquiry();
-    round_inquiry();
+    lap_inquiry();
     l.printLayout();
     while (gameRunning) {
         do {
-            cout << endl << "Flash: " << flashRoundLeft << " rounds left.";
-            cout << endl << "Superman: " << supermanRoundLeft << " rounds left.";
+            cout << endl << "Flash: " << flashLapLeft << " laps left.";
+            cout << endl << "Superman: " << supermanLapLeft << " laps left.";
             cout << endl <<"press y to run: ";
             cin >> confirmation;
         } while (confirmation != "y");
