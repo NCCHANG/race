@@ -189,7 +189,7 @@ void box_inquiry() {
     supermanYPosition = height - 1;
 }
 
-void round_inquiry() {
+void round_inquiry() { // round change to lap
     int num_of_round;
     do {
         cout << "Number of Round: ";
