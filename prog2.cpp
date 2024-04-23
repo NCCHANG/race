@@ -25,10 +25,16 @@ int supermanXPosition = 3;
 int supermanYPosition = height - 1;
 int supermanLapLeft = 2;
 
+char batman = 'b'; //3-6
+int batmanXPosition = 2;
+int batmanYPosition = height - 1;
+int batmanLapLeft = 2;
+
 //for counting
 int step;
 int flashLocation = 0;
 int supermanLocation = 0;
+int batmanLocation = 0;
 
 class layout {
     void plusMinus(int x) { //+---+---+ (depends on the x)
@@ -53,8 +59,10 @@ class layout {
             } else if (x == flashXPosition && y == flashYPosition) {
             cout << flash;  
             } else if (x == supermanXPosition && y == supermanYPosition) {
-            cout << superman; }
-            else {
+            cout << superman;
+            } else if (x == batmanXPosition && y == batmanYPosition) {
+            cout << batman;
+            } else {
                 cout << ' ';
             }
     }
@@ -65,8 +73,10 @@ class layout {
         } else if (x == flashXPosition && y == flashYPosition) {
             cout << flash;    
         } else if (x == supermanXPosition && y == supermanYPosition) {
-            cout << superman; }
-        else {
+            cout << superman;
+        } else if (x == batmanXPosition && y == batmanYPosition) {
+        cout << batman;
+        } else {
             cout << ' ';
         }
     }
@@ -115,6 +125,9 @@ void checkWinner()
         cout << endl << "Flash Won!" << endl;
         gameRunning = false;
     } else if (supermanLocation >= box) {
+        cout << endl << "Superman Won!" << endl;
+        gameRunning = false;
+    } else if (batmanLocation >= box) {
         cout << endl << "Superman Won!" << endl;
         gameRunning = false;
     }
