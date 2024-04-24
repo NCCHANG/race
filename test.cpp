@@ -13,8 +13,6 @@ char superman = 'S';
 int supermanXPosition = 3;
 int supermanYPosition = height - 1;
 
-int random = 2 + (rand() % 4);
-
 class layout {
     void plusMinus(int x) { //+---+---+ (depends on the x)
         if (x%4 == 0) {
@@ -94,13 +92,28 @@ class layout {
     }
 };
 
-void flashStepLayout() {
+void endGameCondition(int flashStep, bool gmaeEnd)
+{
+    if (flashStep >= 32) {
+        flashYPosition = 7;
+        flashXPosition = 1;
+        cout << "Game End" << endl;
+        cout << "Flash Won!" << endl;
+        bool gameEnd = true;
+
+    }
+}
+
+int flashStepLayout() {
     layout l;
 
     srand(time(0));
-    int steps = 2 + (rand() % 4);
+    int steps = 2 + (rand() % 5);
+    bool gameEnd = false;
     static int totalBoxMoved = 0;
     totalBoxMoved = totalBoxMoved + steps;
+
+    endGameCondition(totalBoxMoved, gameEnd);
 
     // This is for flash run from left column to top
     if (flashYPosition != 0 && flashXPosition == 1) {
@@ -144,6 +157,7 @@ void flashStepLayout() {
         flashXPosition = flashXPosition - (4 * steps);
     }
     // l.printLayout();
+    return 0;
 }
 
 void supermanStepLayout() {
@@ -200,16 +214,16 @@ void supermanStepLayout() {
 
 void startGameInput() {
         char start;
-        cout << '\n' << "Press Y to start:";
+        cout << '\n' << "Enter y to start:";
         cin >> start;
-    if (start == 'Y') {
+    if (start == 'y') {
         cout << '\n' << '\n';
         flashStepLayout();
         supermanStepLayout();
         cout << '\n' << '\n';
     }
     else {
-        cout << "Please enter Y";
+        cout << "Please enter y";
         return startGameInput();
     }
 }
