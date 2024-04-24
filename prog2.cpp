@@ -128,7 +128,7 @@ void checkWinner()
         cout << endl << "Superman Won!" << endl;
         gameRunning = false;
     } else if (batmanLocation >= box) {
-        cout << endl << "Superman Won!" << endl;
+        cout << endl << "Batman Won!" << endl;
         gameRunning = false;
     }
 }
@@ -200,6 +200,7 @@ void box_inquiry() {
     }
     flashYPosition = height - 1;
     supermanYPosition = height - 1;
+    batmanYPosition = height - 1;
 }
 
 void lap_inquiry() {
@@ -210,6 +211,7 @@ void lap_inquiry() {
     } while (num_of_lap < 1);
     flashLapLeft = num_of_lap;
     supermanLapLeft = num_of_lap;
+    batmanLapLeft = num_of_lap;
 }
 
 void flashMove()
@@ -232,6 +234,16 @@ void supermanMove()
     logic(3,supermanLocation,supermanXPosition,supermanYPosition,supermanLapLeft);
 }
 
+void batmanMove()
+{
+    srand(time(0));
+    step = 3 + (rand() % 4); //3 - 6
+    batmanLocation += step;
+    cout << "Batman move " << step << " steps." << endl;
+    
+    logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft);
+}
+
 int main()
 {
     string confirmation;
@@ -243,12 +255,14 @@ int main()
         do {
             cout << endl << "Flash: " << flashLapLeft << " laps left.";
             cout << endl << "Superman: " << supermanLapLeft << " laps left.";
+            cout << endl << "Batman: " << batmanLapLeft << " laps left.";
             cout << endl <<"press y to run: ";
             cin >> confirmation;
         } while (confirmation != "y");
 
         flashMove();
         supermanMove();
+        batmanMove();
         l.printLayout();
     }
     cout << endl;
