@@ -16,6 +16,8 @@ int supermanYPosition = height - 1;
 static int totalBoxMovedF = 0;
 static int totalBoxMovedS = 0;
 
+bool gameRunning = true;
+
 class layout {
     void plusMinus(int x) { //+---+---+ (depends on the x)
         if (x%4 == 0) {
@@ -102,12 +104,14 @@ void endGameCondition()
         flashXPosition = 1;
         cout << "Game End" << endl;
         cout << "Flash Won!" << endl;
+        gameRunning = false;
     }
     else if (totalBoxMovedS >= 32 && totalBoxMovedF < totalBoxMovedS){
         supermanYPosition = 8;
         supermanXPosition = 3;
         cout << "Game End" << endl;
         cout << "Superman Won!" << endl;
+        gameRunning = false;
     }
 }
 
@@ -216,13 +220,13 @@ void supermanStepLayout() {
 
 void startGameInput() {
         char start;
-        cout << '\n' << "Enter y to start:";
+        cout << endl << "Enter y to start:";
         cin >> start;
     if (start == 'y') {
         cout << '\n' << '\n';
         flashStepLayout();
         supermanStepLayout();
-        cout << '\n' << '\n';
+        cout << endl;
     }
     else {
         cout << "Please enter y";
@@ -232,12 +236,10 @@ void startGameInput() {
 
 int main()
 {
-    int i = 0;
     layout l;
     l.printLayout();
-    while (i < 10) {
+    while (gameRunning == true) {
         startGameInput();
-        i = i + 1;
         endGameCondition();
     }
 
