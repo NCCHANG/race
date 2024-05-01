@@ -99,7 +99,16 @@ class layout {
 
 void endGameCondition()
 {
-    if (totalBoxMovedF >= 32 && totalBoxMovedS < totalBoxMovedF) {
+    if (totalBoxMovedF == totalBoxMovedS && totalBoxMovedF >= 32 && totalBoxMovedS >= 32) {
+        flashYPosition = 8;
+        flashXPosition = 1;
+        supermanYPosition = 8;
+        supermanXPosition = 3;
+        cout << "Game End" << endl;
+        cout << "DRAW" << endl;
+        gameRunning = false;
+    }
+    else if (totalBoxMovedF >= 32 && totalBoxMovedS < totalBoxMovedF) {
         flashYPosition = 8;
         flashXPosition = 1;
         cout << "Game End" << endl;
