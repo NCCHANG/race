@@ -257,6 +257,5 @@ int main()
         endGameCondition();
         l.printLayout();
     }
-
     return 0;
 }
