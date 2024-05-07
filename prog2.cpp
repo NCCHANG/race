@@ -19,16 +19,19 @@ char flash = 'f';
 int flashXPosition = 1;
 int flashYPosition = height - 1;
 int flashLapLeft = 2;
+bool flashEnded = false;
 
 char superman = 's';
 int supermanXPosition = 3;
 int supermanYPosition = height - 1;
 int supermanLapLeft = 2;
+bool supermanEnded = false;
 
 char batman = 'b'; //3-6
 int batmanXPosition = 2;
 int batmanYPosition = height - 1;
 int batmanLapLeft = 2;
+bool batmanEnded = false;
 
 //for counting
 int step;
@@ -121,20 +124,33 @@ class layout {
 
 void checkWinner()
 {
-    if (flashLocation >= box) {
+    if (flashLocation > supermanLocation && flashLocation > batmanLocation && flashEnded == true) {
         cout << endl << "Flash Won!" << endl;
         gameRunning = false;
-    } else if (supermanLocation >= box) {
+    } else if (supermanLocation > flashLocation && supermanLocation > batmanLocation && supermanEnded == true) {
         cout << endl << "Superman Won!" << endl;
         gameRunning = false;
-    } else if (batmanLocation >= box) {
+    } else if (batmanLocation > supermanLocation && batmanLocation > flashLocation && batmanEnded == true) {
         cout << endl << "Batman Won!" << endl;
         gameRunning = false;
+    } else if ((batmanLocation == flashLocation == supermanLocation) && 
+                (batmanEnded == true && flashEnded == true && supermanEnded == true))
+    {
+        cout << "Draw!";
+    } else if (supermanLocation == flashLocation && flashEnded == true && supermanEnded == true)
+    {
+        cout << "Draw!";
+    } else if (supermanLocation == batmanLocation && batmanEnded == true && supermanEnded == true)
+    {
+        cout << "Draw!";
+    } else if (batmanLocation == flashLocation && flashEnded == true && batmanEnded == true)
+    {
+        cout << "Draw!";
     }
 }
 
 void logic(int coordinateX, int &location, int &racerX, int &racerY,
-            int &roundLeft, int coordinateY = height - 1) {
+            int &roundLeft, bool &playerEnd, int coordinateY = height - 1) {
     int coordinate = 0;
     int ox = coordinateX;
     int oy = coordinateY;
@@ -144,12 +160,10 @@ void logic(int coordinateX, int &location, int &racerX, int &racerY,
         location -= box;
         roundLeft -= 1;
     } else if (location >= box && roundLeft == 1) {
-        racerX = ox;
-        racerY = oy;
-        checkWinner();
+        playerEnd = true;
     }
     //getting x and y for the coordination
-    while (coordinate < box && location < box) {
+    while (coordinate < (box + 10) && location < (box + 10)) {
 
         if (location == coordinate) {
             racerX = coordinateX;
@@ -157,13 +171,13 @@ void logic(int coordinateX, int &location, int &racerX, int &racerY,
             break;
         }
 
-        if (coordinate >= topLeftCoordinate && coordinate < topRightCoordinate){
+        if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
             coordinateX += 4;
         } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
             coordinateY += 1;
         }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
             coordinateX -= 4;
-        } else if (coordinate < topLeftCoordinate){
+        } else if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
             coordinateY -= 1;
         }
         
@@ -221,7 +235,7 @@ void flashMove()
     flashLocation += step;
     cout << endl << "Flash move " << step << " steps." << endl;
     
-    logic(1,flashLocation,flashXPosition,flashYPosition,flashLapLeft);
+    logic(1,flashLocation,flashXPosition,flashYPosition,flashLapLeft,flashEnded);
 }
 
 void supermanMove()
@@ -231,7 +245,7 @@ void supermanMove()
     supermanLocation += step;
     cout << "Superman move " << step << " steps." << endl;
     
-    logic(3,supermanLocation,supermanXPosition,supermanYPosition,supermanLapLeft);
+    logic(3,supermanLocation,supermanXPosition,supermanYPosition,supermanLapLeft,supermanEnded);
 }
 
 void batmanMove()
@@ -241,7 +255,7 @@ void batmanMove()
     batmanLocation += step;
     cout << "Batman move " << step << " steps." << endl;
     
-    logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft);
+    logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft,batmanEnded);
 }
 
 int main()
@@ -263,6 +277,7 @@ int main()
         flashMove();
         supermanMove();
         batmanMove();
+        checkWinner();
         l.printLayout();
     }
     cout << endl;
