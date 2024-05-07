@@ -137,6 +137,15 @@ void checkWinner()
                 (batmanEnded == true && flashEnded == true && supermanEnded == true))
     {
         cout << "Draw!";
+    } else if (supermanLocation == flashLocation && flashEnded == true && supermanEnded == true)
+    {
+        cout << "Draw!";
+    } else if (supermanLocation == batmanLocation && batmanEnded == true && supermanEnded == true)
+    {
+        cout << "Draw!";
+    } else if (batmanLocation == flashLocation && flashEnded == true && batmanEnded == true)
+    {
+        cout << "Draw!";
     }
 }
 
@@ -154,7 +163,7 @@ void logic(int coordinateX, int &location, int &racerX, int &racerY,
         playerEnd = true;
     }
     //getting x and y for the coordination
-    while (coordinate < box && location < box) {
+    while (coordinate < (box + 10) && location < (box + 10)) {
 
         if (location == coordinate) {
             racerX = coordinateX;
@@ -162,13 +171,13 @@ void logic(int coordinateX, int &location, int &racerX, int &racerY,
             break;
         }
 
-        if (coordinate >= topLeftCoordinate && coordinate < topRightCoordinate){
+        if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
             coordinateX += 4;
         } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
             coordinateY += 1;
         }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
             coordinateX -= 4;
-        } else if (coordinate < topLeftCoordinate){
+        } else if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
             coordinateY -= 1;
         }
         
