@@ -4,13 +4,13 @@
 using namespace std;
 
 //configuration
-int height = 3;
-int width = 17;
+int height = 11;
+int width = 49;
 
 int box = 10;
-int topRightCoordinate = 5;
-int botRightCoordinate = 7;
-int topLeftCoordinate = 2;
+int topRightCoordinate = 21;
+int botRightCoordinate = 31;
+int topLeftCoordinate = 10;
 
 bool gameRunning = true;
 
@@ -189,13 +189,13 @@ void logic(int coordinateX, int &location, int &racerX, int &racerY,
 
 void box_inquiry() {
     int boxExtraNeeded;
-    cout << "How many block do you need? (minimum 10 box and must be even number):" ;
+    cout << "How many block do you need? (minimum 42 box and must be even number):" ;
     cin >> box;
-    if (box % 2 != 0 || box < 10){
+    if (box % 2 != 0 || box < 42){
         cout << "Please enter a valid block amount!" << endl;
         box_inquiry();
     }
-    boxExtraNeeded = box - 10;
+    boxExtraNeeded = box - 42;
     while (boxExtraNeeded > 0) {
         height += 1;   // expand verticcal
         boxExtraNeeded -= 2;
