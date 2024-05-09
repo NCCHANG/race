@@ -1,7 +1,10 @@
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include <time.h>
 
 using namespace std;
+using namespace std::chrono;
 
 //configuration
 int height = 11;
@@ -266,14 +269,7 @@ int main()
     lap_inquiry();
     l.printLayout();
     while (gameRunning) {
-        do {
-            cout << endl << "Flash: " << flashLapLeft << " laps left.";
-            cout << endl << "Superman: " << supermanLapLeft << " laps left.";
-            cout << endl << "Batman: " << batmanLapLeft << " laps left.";
-            cout << endl <<"press y to run: ";
-            cin >> confirmation;
-        } while (confirmation != "y");
-
+        this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
         flashMove();
         supermanMove();
         batmanMove();
