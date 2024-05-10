@@ -178,7 +178,6 @@ int flashStepLayout() {
     else if (flashYPosition == boxNumEachRow) {
         flashXPosition = flashXPosition - (4 * steps);
     }
-    // l.printLayout();
     return 0;
 }
 
