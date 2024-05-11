@@ -152,23 +152,23 @@ void checkWinner()
     }
 }
 
-void logic(int coordinateX, int &location, int &racerX, int &racerY,
+void logic(int coordinateX, int &racerlocation, int &racerX, int &racerY,
             int &roundLeft, bool &playerEnd, int coordinateY = height - 1) {
     int coordinate = 0;
     int ox = coordinateX;
     int oy = coordinateY;
 
     //check if round end
-    if (location >= box && roundLeft != 1) {
-        location -= box;
+    if (racerlocation >= box && roundLeft != 1) {
+        racerlocation -= box;
         roundLeft -= 1;
-    } else if (location >= box && roundLeft == 1) {
+    } else if (racerlocation >= box && roundLeft == 1) {
         playerEnd = true;
     }
     //getting x and y for the coordination
-    while (coordinate < (box + 10) && location < (box + 10)) {
+    while (coordinate < (box + 10) && racerlocation < (box + 10)) {
 
-        if (location == coordinate) {
+        if (racerlocation == coordinate) {
             racerX = coordinateX;
             racerY = coordinateY;
             break;
