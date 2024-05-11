@@ -166,7 +166,7 @@ void logic(int coordinateX, int &racerlocation, int &racerX, int &racerY,
         playerEnd = true;
     }
     //getting x and y for the coordination
-    while (coordinate < (box + 10) && racerlocation < (box + 10)) {
+    while (coordinate < (box + 10)) {
 
         if (racerlocation == coordinate) {
             racerX = coordinateX;
