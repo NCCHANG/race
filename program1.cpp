@@ -1,7 +1,11 @@
 #include <iostream>
 #include <time.h>
+#include <chrono>
+#include <thread>
+#include <time.h>
 
 using namespace std;
+using namespace std::chrono;
 
 int height = 9;
 int width = 37;
@@ -102,36 +106,18 @@ layout l;
 void endGameCondition()
 {
     if (totalBoxMovedF == totalBoxMovedS && totalBoxMovedF >= 32 && totalBoxMovedS >= 32) {
-        flashYPosition = 8;
-        flashXPosition = 1;
-        supermanYPosition = 8;
-        supermanXPosition = 3;
         cout << '\n' << "Game End" << endl;
         cout << "DRAW" << endl;
-        cout << '\n' << "Flash Last Location At    " << totalBoxMovedF << endl;
-        cout << "Superman Last Location At " << totalBoxMovedS << endl;
         gameRunning = false;
     }
     else if (totalBoxMovedF >= 32 && totalBoxMovedS < totalBoxMovedF) {
-        flashYPosition = 8;
-        flashXPosition = 1;
-        supermanYPosition = 8;
-        supermanXPosition = 3;
         cout << '\n' << "Game End" << endl;
         cout << "Flash Won!" << endl;
-        cout << '\n' << "Flash Last Location At    " << totalBoxMovedF << endl;
-        cout << "Superman Last Location At " << totalBoxMovedS << endl;
         gameRunning = false;
     }
     else if (totalBoxMovedS >= 32 && totalBoxMovedF < totalBoxMovedS){
-        supermanYPosition = 8;
-        supermanXPosition = 3;
-        flashYPosition = 8;
-        flashXPosition = 1;
         cout << '\n' << "Game End" << endl;
         cout << "Superman Won!" << endl;
-        cout << '\n' << "Flash Last Location At    " << totalBoxMovedF << endl;
-        cout << "Superman Last Location At " << totalBoxMovedS << endl;
         gameRunning = false;
     }
 }
@@ -237,32 +223,36 @@ void supermanStepLayout() {
     }
 }
 
-void startGameInput() {
-        char start;
-        cout << '\n' << "Flash Current Location At    " << totalBoxMovedF << endl;
-        cout << "Superman Current Location At " << totalBoxMovedS << endl;
-        cout << endl << "Enter y to start:";
-        cin >> start;
-    if (start == 'y') {
-        cout << '\n' << '\n';
+void startGame() {
         flashStepLayout();
         supermanStepLayout();
-        cout << endl;
-    }
-    else {
-        cout << "Please enter y";
-        return startGameInput();
-    }
 }
 
 int main()
 {
     layout l;
-    l.printLayout();
+    // l.printLayout();
+    // cout << '\n' << endl;
+
     while (gameRunning == true) {
-        startGameInput();
+        this_thread::sleep_for(milliseconds(1500)); //pause for 1.5sec
         endGameCondition();
+        if (gameRunning == true) {
+            cout << '\n' << "Flash Current Location At    " << totalBoxMovedF << endl;
+            cout << "Superman Current Location At " << totalBoxMovedS << endl;
+            cout << endl;
+        }
+        else {
+            supermanYPosition = 8;
+            supermanXPosition = 3;
+            flashYPosition = 8;
+            flashXPosition = 1;
+            cout << '\n' << "Flash Last Location At    " << totalBoxMovedF << endl;
+            cout << "Superman Last Location At " << totalBoxMovedS << endl;
+
+        }
         l.printLayout();
+        startGame();
     }
     return 0;
 }
