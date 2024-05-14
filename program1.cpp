@@ -230,9 +230,17 @@ void startGame() {
 
 int main()
 {
+    char run;
     layout l;
-    // l.printLayout();
-    // cout << '\n' << endl;
+    cout << "Do you want to start the game? : ";
+    cin >> run;
+    if (run == 'y') {
+        gameRunning == true;
+    }
+    else {
+        cout << "Please Enter y to start the game" << endl;
+        main();
+    }
 
     while (gameRunning == true) {
         this_thread::sleep_for(milliseconds(1500)); //pause for 1.5sec
@@ -240,7 +248,6 @@ int main()
         if (gameRunning == true) {
             cout << '\n' << "Flash Current Location At    " << totalBoxMovedF << endl;
             cout << "Superman Current Location At " << totalBoxMovedS << endl;
-            cout << endl;
         }
         else {
             supermanYPosition = 8;
@@ -252,6 +259,7 @@ int main()
 
         }
         l.printLayout();
+        cout << endl;
         startGame();
     }
     return 0;
