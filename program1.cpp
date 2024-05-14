@@ -108,6 +108,8 @@ void endGameCondition()
         supermanXPosition = 3;
         cout << '\n' << "Game End" << endl;
         cout << "DRAW" << endl;
+        cout << '\n' << "Flash Last Location At    " << totalBoxMovedF << endl;
+        cout << "Superman Last Location At " << totalBoxMovedS << endl;
         gameRunning = false;
     }
     else if (totalBoxMovedF >= 32 && totalBoxMovedS < totalBoxMovedF) {
@@ -117,6 +119,8 @@ void endGameCondition()
         supermanXPosition = 3;
         cout << '\n' << "Game End" << endl;
         cout << "Flash Won!" << endl;
+        cout << '\n' << "Flash Last Location At    " << totalBoxMovedF << endl;
+        cout << "Superman Last Location At " << totalBoxMovedS << endl;
         gameRunning = false;
     }
     else if (totalBoxMovedS >= 32 && totalBoxMovedF < totalBoxMovedS){
@@ -126,6 +130,8 @@ void endGameCondition()
         flashXPosition = 1;
         cout << '\n' << "Game End" << endl;
         cout << "Superman Won!" << endl;
+        cout << '\n' << "Flash Last Location At    " << totalBoxMovedF << endl;
+        cout << "Superman Last Location At " << totalBoxMovedS << endl;
         gameRunning = false;
     }
 }
@@ -233,6 +239,8 @@ void supermanStepLayout() {
 
 void startGameInput() {
         char start;
+        cout << '\n' << "Flash Current Location At    " << totalBoxMovedF << endl;
+        cout << "Superman Current Location At " << totalBoxMovedS << endl;
         cout << endl << "Enter y to start:";
         cin >> start;
     if (start == 'y') {
