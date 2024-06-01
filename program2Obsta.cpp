@@ -47,24 +47,33 @@ int flashLocation = 0;
 int supermanLocation = 0;
 int batmanLocation = 0;
 
-struct obstacle {
+struct Obstacle {
 
-    int obstacleNum, temp, coordinate, i = 0;
+    int obstacleNum, temp, coordinate = 0;
     vector<int> myXObstacle;
 
     void obstacleDisplay(vector<int> myYobstacle, int xCoordinate, int yCoordinate, int i) {
-        while (myXObstacle[i] < topLeftCoordinate) {
+        while (coordinate < box) {
 
-            if (coordinate == myYobstacle[i]) {
-                xCoordinate == obstacleXPosition;
-                yCoordinate = obstacleYPosition;
+            if (myYobstacle[i] == coordinate) {
+                obstacleXPosition = xCoordinate;
+                obstacleYPosition = yCoordinate;
+                break;
             }
 
-            if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
+            if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
+                xCoordinate += 4;
+            } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
+                yCoordinate += 1;
+            }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
+                xCoordinate -= 4;
+            } else if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
                 yCoordinate -= 1;
-            }  
-        coordinate ++;
-        }
+            }
+            
+            coordinate ++;
+
+        }  
     }
 
     vector<int>  obstacle_inquiry() {
@@ -89,11 +98,10 @@ struct obstacle {
     }
     return myXObstacle;
     }
-};
+} obstacle ; 
 
 class layout {
 
-    int i = 0;
     int box = height - 1;
 
     void plusMinus(int x) { //+---+---+ (depends on the x)
@@ -113,6 +121,8 @@ class layout {
     }
 
     void straightLineBorder (int x, int y, vector<int> myYobstacle) { //|   |   |   |   |   |   |   | (depends on the x)
+        int i = 0;
+        obstacle.obstacleDisplay(myYobstacle, x, y, i);
         if (x%4 == 0) {
                 cout << '|';
             } else if (x == flashXPosition && y == flashYPosition) {
@@ -121,18 +131,17 @@ class layout {
             cout << superman;
             } else if (x == batmanXPosition && y == batmanYPosition) {
             cout << batman;
-            } else {
+            } else if (x == obstacleXPosition && y == obstacleYPosition) {
+            cout << obstacles;
+            }
+            else {
                 cout << ' ';
             }
     }
 
     void straightLineNotBorder (int x, int y, vector<int> myYobstacle) { //|   |                |   | (depends on x)
-        obstacle o;
-        while (i < 5) {
-            if (myYobstacle[i] < topLeftCoordinate) {
-                o.obstacleDisplay(myYobstacle, x, y, i);
-            }
-        }
+        int i = 0;
+        obstacle.obstacleDisplay(myYobstacle, x, y, i);
         if ( x==0 || x==4 || x==width - 5 || x==width - 1) {
             cout << '|';
         } else if (x == flashXPosition && y == flashYPosition) {
@@ -327,11 +336,10 @@ int main()
 {
     string confirmation;
     layout l;
-    obstacle o;
     box_inquiry();
     lap_inquiry();
-    o.myXObstacle = o.obstacle_inquiry();
-    l.printLayout(o.myXObstacle);
+    obstacle.myXObstacle = obstacle.obstacle_inquiry();
+    l.printLayout(obstacle.myXObstacle);
     while (gameRunning) {
         this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
         flashMove();
