@@ -37,6 +37,10 @@ int batmanYPosition = height - 1;
 int batmanLapLeft = 2;
 bool batmanEnded = false;
 
+char obstacles = 'O';
+int obstacleXPosition = 2;
+int obstacleYPosition = height - 1;
+
 //for counting
 int step;
 int flashLocation = 0;
@@ -48,28 +52,20 @@ struct obstacle {
     int obstacleNum, temp, coordinate, i = 0;
     vector<int> myXObstacle;
 
-    void obstacleDisplay(vector<int> myYobstacle, int x, int y) {
-        if (coordinate == myYobstacle[i]) {
-            x = coordinateX;
-            y = coordinateY;
+    void obstacleDisplay(vector<int> myYobstacle, int xCoordinate, int yCoordinate, int i) {
+        while (myXObstacle[i] < topLeftCoordinate) {
+
+            if (coordinate == myYobstacle[i]) {
+                xCoordinate == obstacleXPosition;
+                yCoordinate = obstacleYPosition;
+            }
+
+            if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
+                yCoordinate -= 1;
+            }  
+        coordinate ++;
         }
     }
-
-    if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
-        coordinateX += 4;
-    } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
-        coordinateY += 1;
-    }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
-        coordinateX -= 4;
-    } else if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
-        coordinateY -= 1;
-    }
-    
-    coordinate ++;
-
-
-
-
 
     vector<int>  obstacle_inquiry() {
     
@@ -132,6 +128,11 @@ class layout {
 
     void straightLineNotBorder (int x, int y, vector<int> myYobstacle) { //|   |                |   | (depends on x)
         obstacle o;
+        while (i < 5) {
+            if (myYobstacle[i] < topLeftCoordinate) {
+                o.obstacleDisplay(myYobstacle, x, y, i);
+            }
+        }
         if ( x==0 || x==4 || x==width - 5 || x==width - 1) {
             cout << '|';
         } else if (x == flashXPosition && y == flashYPosition) {
@@ -140,14 +141,13 @@ class layout {
             cout << superman;
         } else if (x == batmanXPosition && y == batmanYPosition) {
             cout << batman;
-        } else if (myYobstacle[i] < y && myYobstacle[i] && y == height - myYobstacle[i] && x ==2) {
-            cout << 'O';
-            i++;
-                // o.obstacleDisplay(myYobstacle, x, y);
+        } else if (x == obstacleXPosition && y == obstacleYPosition) {
+            cout << obstacles;
             }
         else {
             cout << ' ';
         }
+        i++;
     }
     
     public:
