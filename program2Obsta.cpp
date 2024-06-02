@@ -88,7 +88,7 @@ struct Obstacle {
 
     }
 
-    void checkObstacle(int racer) {
+    void checkObstacle(int batmanXPosition, int batmanYPosition, int supermanXPosition, int supermanYPosition, int flashXPosition, int flashYPosition) {
         auto oX = find(obstacleXLocation.begin(), obstacleXLocation.end(), batmanXPosition);
         auto oY = find(obstacleYLocation.begin(), obstacleYLocation.end(), batmanYPosition);
         if (oX != obstacleXLocation.end() && oY != obstacleYLocation.end()) {
@@ -438,9 +438,7 @@ int main()
         flashMove();
         supermanMove();
         batmanMove();
-        obstacle.checkObstacle(flashXPosition, flashYPosition);
-        obstacle.checkObstacle(supermanXPosition, supermanYPosition);
-        obstacle.checkObstacle(batmanXPosition, batmanYPosition);
+        obstacle.checkObstacle(batmanXPosition, batmanYPosition, supermanXPosition, supermanYPosition, flashXPosition, flashYPosition);
         l.printLayout();
         checkWinner();
     }
