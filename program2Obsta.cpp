@@ -88,12 +88,13 @@ struct Obstacle {
 
     }
 
-    void checkObstacle(int xInitial, int racerXPosition, int racerYPosition, int racerLocation) {
+    void checkObstacle(int xInitial, int &racerXPosition, int &racerYPosition, int &racerLocation) {
         auto oX = find(obstacleXLocation.begin(), obstacleXLocation.end(), racerXPosition);
         auto oY = find(obstacleYLocation.begin(), obstacleYLocation.end(), racerYPosition);
         if (oX != obstacleXLocation.end() && oY != obstacleYLocation.end()) {
             for (int i = 0; i<obstacleNum; i++) {
-                if (racerXPosition == obstacleXLocation[i] && racerYPosition == obstacleYLocation[i]) {
+                if ((racerXPosition+1 == obstacleXLocation[i] || racerXPosition-1 == obstacleXLocation[i] || 
+                        racerXPosition == obstacleXLocation[i]) && racerYPosition == obstacleYLocation[i]) {
                     move3Back(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
                 }
             }
