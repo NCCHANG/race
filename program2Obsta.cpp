@@ -88,9 +88,9 @@ struct Obstacle {
 
     }
 
-    void checkObstacle(int batmanXPosition, int batmanYPosition, int supermanXPosition, int supermanYPosition, int flashXPosition, int flashYPosition) {
+    void checkObstacle(int racer) {
         auto oX = find(obstacleXLocation.begin(), obstacleXLocation.end(), batmanXPosition);
-        auto oY = find(obstacleXLocation.begin(), obstacleXLocation.end(), batmanYPosition);
+        auto oY = find(obstacleYLocation.begin(), obstacleYLocation.end(), batmanYPosition);
         if (oX != obstacleXLocation.end() && oY != obstacleYLocation.end()) {
             for (int i = 0; i<obstacleNum; i++) {
                 if (batmanXPosition == obstacleXLocation[i] && batmanYPosition == obstacleYLocation[i]) {
@@ -228,7 +228,6 @@ class layout {
         bool printO = false;
         vector<int>::iterator rx = find(obstacle.obstacleXLocation.begin(), obstacle.obstacleXLocation.end(), x);
         vector<int>::iterator ry = find(obstacle.obstacleYLocation.begin(), obstacle.obstacleYLocation.end(), y);
-        obstacle.checkObstacle(batmanXPosition, batmanYPosition, supermanXPosition, supermanYPosition, flashXPosition, flashYPosition);
         if ( x==0 || x==4 || x==width - 5 || x==width - 1) {
             cout << '|';
         } else if (x == flashXPosition && y == flashYPosition) {
@@ -439,6 +438,9 @@ int main()
         flashMove();
         supermanMove();
         batmanMove();
+        obstacle.checkObstacle(flashXPosition, flashYPosition);
+        obstacle.checkObstacle(supermanXPosition, supermanYPosition);
+        obstacle.checkObstacle(batmanXPosition, batmanYPosition);
         l.printLayout();
         checkWinner();
     }
