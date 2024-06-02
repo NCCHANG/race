@@ -88,13 +88,13 @@ struct Obstacle {
 
     }
 
-    void checkObstacle(int batmanXPosition, int batmanYPosition, int supermanXPosition, int supermanYPosition, int flashXPosition, int flashYPosition) {
-        auto oX = find(obstacleXLocation.begin(), obstacleXLocation.end(), batmanXPosition);
-        auto oY = find(obstacleYLocation.begin(), obstacleYLocation.end(), batmanYPosition);
+    void checkObstacle(int xInitial, int racerXPosition, int racerYPosition, int racerLocation) {
+        auto oX = find(obstacleXLocation.begin(), obstacleXLocation.end(), racerXPosition);
+        auto oY = find(obstacleYLocation.begin(), obstacleYLocation.end(), racerYPosition);
         if (oX != obstacleXLocation.end() && oY != obstacleYLocation.end()) {
             for (int i = 0; i<obstacleNum; i++) {
-                if (batmanXPosition == obstacleXLocation[i] && batmanYPosition == obstacleYLocation[i]) {
-                    move3Back(2, height-1, batmanLocation, batmanXPosition, batmanYPosition);
+                if (racerXPosition == obstacleXLocation[i] && racerYPosition == obstacleYLocation[i]) {
+                    move3Back(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
                 }
             }
         }
@@ -435,10 +435,12 @@ int main()
     l.printLayout(obstacle.obstacleLocation);
     while (gameRunning) {
         this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
+        obstacle.checkObstacle(3, supermanXPosition, supermanYPosition, supermanLocation);
+        obstacle.checkObstacle(1, flashXPosition, flashYPosition, flashLocation);
+        obstacle.checkObstacle(2, batmanXPosition, batmanYPosition, batmanLocation);
         flashMove();
         supermanMove();
         batmanMove();
-        obstacle.checkObstacle(batmanXPosition, batmanYPosition, supermanXPosition, supermanYPosition, flashXPosition, flashYPosition);
         l.printLayout();
         checkWinner();
     }
