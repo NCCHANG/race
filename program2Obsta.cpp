@@ -52,6 +52,53 @@ struct Obstacle {
     vector<int> obstacleLocation;
     vector<int> obstacleXLocation;
     vector<int> obstacleYLocation;
+    vector<char> obstacleFunc;
+
+    void move3Back(int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
+        
+        int coordinate = 0;
+        racerLocation = racerLocation - 3;
+        while (coordinate < (box + 10)) {
+
+            if (coordinate == racerLocation) {
+                racerxCoordinate = xCoordinate; 
+                raceryCoordinate = yCoordinate;
+                break;
+            }
+
+            if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
+                xCoordinate += 4;
+            } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
+                yCoordinate += 1;
+            }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
+                xCoordinate -= 4;
+            } else if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
+                yCoordinate -= 1;
+            }
+            
+            coordinate++;
+        } 
+    }
+
+    void moved5Back() {
+
+    }
+
+    void missTurn() {
+
+    }
+
+    void checkObstacle(int batmanXPosition, int batmanYPosition, int supermanXPosition, int supermanYPosition, int flashXPosition, int flashYPosition) {
+        auto oX = find(obstacleXLocation.begin(), obstacleXLocation.end(), batmanXPosition);
+        auto oY = find(obstacleXLocation.begin(), obstacleXLocation.end(), batmanYPosition);
+        if (oX != obstacleXLocation.end() && oY != obstacleYLocation.end()) {
+            for (int i = 0; i<obstacleNum; i++) {
+                if (batmanXPosition == obstacleXLocation[i] && batmanYPosition == obstacleYLocation[i]) {
+                    move3Back(2, height-1, batmanLocation, batmanXPosition, batmanYPosition);
+                }
+            }
+        }
+    }
 
     void obstacleXYPosition(vector<int> myXobstacle) {
         int xCoordinate = 2;
@@ -90,6 +137,27 @@ struct Obstacle {
         }
     }
 
+    // void obstacleFunc_inquiry(vector<int> obstacleLocation) {
+    //     cout << "Enter function for this obstacle (a=backward 3 step, b=backward 5 step, c=miss one trun): ";
+    //     for (int i=0; i < obstacleNum; i++) { 
+    //         cin >> temp;
+    //         obstacleFunc.push_back(temp);
+    //     }
+    //     for (int i=0; i < obstacleNum; i++) {
+    //         switch(obstacleFunc[i]) {
+    //             case 'a':
+    //             move3Back();
+    //             break;
+    //             case 'b':
+    //             moved5Back();
+    //             break;
+    //             case 'c':
+    //             missTurn();
+    //             break;
+    //         }
+    //     }
+    // }
+
     vector<int>  obstacle_inquiry() {
     
         cout << "How many Obstacle Do You Want (5-10): ";
@@ -105,10 +173,7 @@ struct Obstacle {
             obstacleLocation.push_back(temp);
         }
 
-        for (int i=0; i < obstacleNum; i++) {  // For printing vector
-            cout << obstacleLocation[i] << ' ';
-            }
-        cout << endl;
+        //obstacleFunc_inquiry(obstacleLocation);
     }
     return obstacleLocation;
     }
@@ -163,6 +228,7 @@ class layout {
         bool printO = false;
         vector<int>::iterator rx = find(obstacle.obstacleXLocation.begin(), obstacle.obstacleXLocation.end(), x);
         vector<int>::iterator ry = find(obstacle.obstacleYLocation.begin(), obstacle.obstacleYLocation.end(), y);
+        obstacle.checkObstacle(batmanXPosition, batmanYPosition, supermanXPosition, supermanYPosition, flashXPosition, flashYPosition);
         if ( x==0 || x==4 || x==width - 5 || x==width - 1) {
             cout << '|';
         } else if (x == flashXPosition && y == flashYPosition) {
