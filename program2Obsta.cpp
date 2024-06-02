@@ -3,6 +3,7 @@
 #include <thread>
 #include <time.h>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 using namespace std::chrono;
@@ -37,10 +38,6 @@ int batmanYPosition = height - 1;
 int batmanLapLeft = 2;
 bool batmanEnded = false;
 
-char obstacles = 'O';
-int obstacleXPosition = 2;
-int obstacleYPosition = height - 1;
-
 //for counting
 int step;
 int flashLocation = 0;
@@ -49,16 +46,25 @@ int batmanLocation = 0;
 
 struct Obstacle {
 
-    int obstacleNum, temp, coordinate = 0;
-    vector<int> myXObstacle;
+    int obstacleNum, temp = 0;
+    int i = 0;
+    int obstacleXPosition = 0, obstacleYPosition = 0;
+    vector<int> obstacleLocation;
+    vector<int> obstacleXLocation;
+    vector<int> obstacleYLocation;
 
-    void obstacleDisplay(vector<int> myYobstacle, int xCoordinate, int yCoordinate, int i) {
+    void obstacleXYPosition(vector<int> myXobstacle) {
+        int xCoordinate = 2;
+        int yCoordinate = height - 1;
+        int coordinate = 0;
         while (coordinate < box) {
 
-            if (myYobstacle[i] == coordinate) {
+            if (myXobstacle[i] == coordinate) {
                 obstacleXPosition = xCoordinate;
                 obstacleYPosition = yCoordinate;
-                break;
+                obstacleXLocation.push_back(xCoordinate);
+                obstacleYLocation.push_back(yCoordinate);
+                i++;
             }
 
             if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
@@ -72,15 +78,23 @@ struct Obstacle {
             }
             
             coordinate ++;
-
         }  
+
+        cout << endl;
+        for (int i=0; i < obstacleNum; i++) {
+            cout << obstacleXLocation[i] << ' ';
+        }
+        cout << endl;
+        for (int i=0; i < obstacleNum; i++) {
+            cout << obstacleYLocation[i] << ' ';
+        }
     }
 
     vector<int>  obstacle_inquiry() {
     
         cout << "How many Obstacle Do You Want (5-10): ";
         cin >> obstacleNum;
-        if (obstacleNum < 5 || obstacleNum > 10){
+        if (obstacleNum < 3 || obstacleNum > 10){
             cout << "Please enter a valid Obstacle amount!" << endl;
             obstacle_inquiry();
         }
@@ -88,21 +102,19 @@ struct Obstacle {
             cout <<"Enter Obstacle location: ";
         for (int i=0; i < obstacleNum; i++) { // Form vector
             cin >> temp;
-            myXObstacle.push_back(temp);
+            obstacleLocation.push_back(temp);
         }
 
         for (int i=0; i < obstacleNum; i++) {  // For printing vector
-            cout << myXObstacle[i] << ' ';
+            cout << obstacleLocation[i] << ' ';
             }
         cout << endl;
     }
-    return myXObstacle;
+    return obstacleLocation;
     }
 } obstacle ; 
 
 class layout {
-
-    int box = height - 1;
 
     void plusMinus(int x) { //+---+---+ (depends on the x)
         if (x%4 == 0) {
@@ -120,9 +132,10 @@ class layout {
         }
     }
 
-    void straightLineBorder (int x, int y, vector<int> myYobstacle) { //|   |   |   |   |   |   |   | (depends on the x)
-        int i = 0;
-        obstacle.obstacleDisplay(myYobstacle, x, y, i);
+    void straightLineBorder (int x, int y, vector<int> myXobstacle) { //|   |   |   |   |   |   |   | (depends on the x)
+        bool printO = false;
+        auto rx = find(obstacle.obstacleXLocation.begin(), obstacle.obstacleXLocation.end(), x);
+        auto ry = find(obstacle.obstacleYLocation.begin(), obstacle.obstacleYLocation.end(), y);
         if (x%4 == 0) {
                 cout << '|';
             } else if (x == flashXPosition && y == flashYPosition) {
@@ -131,17 +144,25 @@ class layout {
             cout << superman;
             } else if (x == batmanXPosition && y == batmanYPosition) {
             cout << batman;
-            } else if (x == obstacleXPosition && y == obstacleYPosition) {
-            cout << obstacles;
-            }
-            else {
+            } else if (rx != obstacle.obstacleXLocation.end() && ry != obstacle.obstacleYLocation.end()) {
+                for (int i = 0; i<obstacle.obstacleNum; i++) {
+                    if (x == obstacle.obstacleXLocation[i] && y == obstacle.obstacleYLocation[i]) {
+                        cout << 'O';
+                        printO = true;
+                    }
+                }
+                if (printO == false) {
+                    cout << ' ';
+                }
+            } else {
                 cout << ' ';
             }
     }
 
-    void straightLineNotBorder (int x, int y, vector<int> myYobstacle) { //|   |                |   | (depends on x)
-        int i = 0;
-        obstacle.obstacleDisplay(myYobstacle, x, y, i);
+    void straightLineNotBorder (int x, int y, vector<int> myXobstacle) { //|   |                |   | (depends on x)
+        bool printO = false;
+        vector<int>::iterator rx = find(obstacle.obstacleXLocation.begin(), obstacle.obstacleXLocation.end(), x);
+        vector<int>::iterator ry = find(obstacle.obstacleYLocation.begin(), obstacle.obstacleYLocation.end(), y);
         if ( x==0 || x==4 || x==width - 5 || x==width - 1) {
             cout << '|';
         } else if (x == flashXPosition && y == flashYPosition) {
@@ -150,13 +171,19 @@ class layout {
             cout << superman;
         } else if (x == batmanXPosition && y == batmanYPosition) {
             cout << batman;
-        } else if (x == obstacleXPosition && y == obstacleYPosition) {
-            cout << obstacles;
+        } else if (rx != obstacle.obstacleXLocation.end() && ry != obstacle.obstacleYLocation.end()) {
+            for (int i = 0; i<obstacle.obstacleNum; i++) {
+                if (x == obstacle.obstacleXLocation[i] && y == obstacle.obstacleYLocation[i]) {
+                    cout << 'O';
+                    printO = true;
+                }
             }
-        else {
+            if (printO == false) {
+                cout << ' ';
+            } 
+        } else {
             cout << ' ';
         }
-        i++;
     }
     
     public:
@@ -338,8 +365,9 @@ int main()
     layout l;
     box_inquiry();
     lap_inquiry();
-    obstacle.myXObstacle = obstacle.obstacle_inquiry();
-    l.printLayout(obstacle.myXObstacle);
+    obstacle.obstacleLocation = obstacle.obstacle_inquiry();
+    obstacle.obstacleXYPosition(obstacle.obstacleLocation);
+    l.printLayout(obstacle.obstacleLocation);
     while (gameRunning) {
         this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
         flashMove();
