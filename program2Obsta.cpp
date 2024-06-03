@@ -47,6 +47,7 @@ int batmanLocation = 0;
 struct Obstacle {
 
     int obstacleNum, temp = 0;
+    char abcFunc;
     int i = 0;
     int obstacleXPosition = 0, obstacleYPosition = 0;
     vector<int> obstacleLocation;
@@ -80,8 +81,30 @@ struct Obstacle {
         } 
     }
 
-    void moved5Back() {
+    void backToInitial(int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
+    
+        int coordinate = 0;
+        racerLocation = racerLocation - racerLocation;
+        while (coordinate < (box + 10)) {
 
+            if (coordinate == racerLocation) {
+                racerxCoordinate = xCoordinate; 
+                raceryCoordinate = yCoordinate;
+                break;
+            }
+
+            if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
+                xCoordinate += 4;
+            } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
+                yCoordinate += 1;
+            }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
+                xCoordinate -= 4;
+            } else if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
+                yCoordinate -= 1;
+            }
+            
+            coordinate++;
+        } 
     }
 
     void missTurn() {
@@ -93,9 +116,23 @@ struct Obstacle {
         auto oY = find(obstacleYLocation.begin(), obstacleYLocation.end(), racerYPosition);
         if (oX != obstacleXLocation.end() && oY != obstacleYLocation.end()) {
             for (int i = 0; i<obstacleNum; i++) {
-                if ((racerXPosition+1 == obstacleXLocation[i] || racerXPosition-1 == obstacleXLocation[i] || 
-                        racerXPosition == obstacleXLocation[i]) && racerYPosition == obstacleYLocation[i]) {
-                    move3Back(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                if ((racerXPosition == obstacleXLocation[i]) && racerYPosition == obstacleYLocation[i]) {
+                    switch(obstacleFunc[i]) {
+                        case 'A':
+                        case 'a':
+                        move3Back(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                        break;
+
+                        case 'B':
+                        case 'b':
+                        backToInitial(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                        break;
+
+                        case 'C':
+                        case 'c':
+                        missTurn();
+                        break;
+                    }
                 }
             }
         }
@@ -127,37 +164,15 @@ struct Obstacle {
             
             coordinate ++;
         }  
-
-        cout << endl;
-        for (int i=0; i < obstacleNum; i++) {
-            cout << obstacleXLocation[i] << ' ';
-        }
-        cout << endl;
-        for (int i=0; i < obstacleNum; i++) {
-            cout << obstacleYLocation[i] << ' ';
-        }
     }
 
-    // void obstacleFunc_inquiry(vector<int> obstacleLocation) {
-    //     cout << "Enter function for this obstacle (a=backward 3 step, b=backward 5 step, c=miss one trun): ";
-    //     for (int i=0; i < obstacleNum; i++) { 
-    //         cin >> temp;
-    //         obstacleFunc.push_back(temp);
-    //     }
-    //     for (int i=0; i < obstacleNum; i++) {
-    //         switch(obstacleFunc[i]) {
-    //             case 'a':
-    //             move3Back();
-    //             break;
-    //             case 'b':
-    //             moved5Back();
-    //             break;
-    //             case 'c':
-    //             missTurn();
-    //             break;
-    //         }
-    //     }
-    // }
+    void obstacleFunc_inquiry() {
+        cout << "Enter function for this obstacle (a=backward 3 step, b=backward 5 step, c=miss one trun): ";
+        for (int i=0; i < obstacleNum; i++) { 
+            cin >> abcFunc;
+            obstacleFunc.push_back(abcFunc);
+        }
+    }
 
     vector<int>  obstacle_inquiry() {
     
@@ -173,9 +188,35 @@ struct Obstacle {
             cin >> temp;
             obstacleLocation.push_back(temp);
         }
+        obstacleFunc_inquiry();
     }
     return obstacleLocation;
     }
+
+    void printObstacleInfo() {  // vector<int> obstacleLocation, vector<char> abcFunc
+        int counter = 1;
+        cout << endl;
+        for (int i = 0; i<obstacleNum; i++) {
+            switch(obstacleFunc[i]) {
+                case 'A':
+                case 'a':
+                cout << "Obstacle " << counter << ":" << "  Location: " << obstacleLocation[i] << "  Function: Move Back 3 step" << endl;
+                break;
+
+                case 'B':
+                case 'b':
+                cout << "Obstacle " << counter << ":" << "  Location: " << obstacleLocation[i] << "  Function: Back To Initial Position" << endl;
+                break;
+
+                case 'C':
+                case 'c':
+                cout << "Obstacle " << counter << ":" << "  Location: " << obstacleLocation[i] << "  Function: Miss One Turn" << endl;
+                break;
+            }
+            counter++;
+        }
+    }
+
 } obstacle ; 
 
 class layout {
@@ -431,7 +472,9 @@ int main()
     lap_inquiry();
     obstacle.obstacleLocation = obstacle.obstacle_inquiry();
     obstacle.obstacleXYPosition(obstacle.obstacleLocation);
+    obstacle.printObstacleInfo();
     l.printLayout(obstacle.obstacleLocation);
+    cout << endl;
     while (gameRunning) {
         this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
         supermanXPosition -= 1;
@@ -444,6 +487,7 @@ int main()
         batmanMove();
         l.printLayout();
         checkWinner();
+        cout << endl;
     }
     cout << endl;
     system("pause");
