@@ -173,8 +173,6 @@ struct Obstacle {
             cin >> temp;
             obstacleLocation.push_back(temp);
         }
-
-        //obstacleFunc_inquiry(obstacleLocation);
     }
     return obstacleLocation;
     }
@@ -436,7 +434,9 @@ int main()
     l.printLayout(obstacle.obstacleLocation);
     while (gameRunning) {
         this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
+        supermanXPosition -= 1;
         obstacle.checkObstacle(3, supermanXPosition, supermanYPosition, supermanLocation);
+        flashXPosition += 1;
         obstacle.checkObstacle(1, flashXPosition, flashYPosition, flashLocation);
         obstacle.checkObstacle(2, batmanXPosition, batmanYPosition, batmanLocation);
         flashMove();
