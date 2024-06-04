@@ -52,9 +52,11 @@ struct Bridge
     {
         vector<int> bridgeYValues;
         int n, yinput;
-
-        cout << "How many bridges: ";
-        cin >> n;
+        
+        do {
+            cout << "How many bridges (3-5): ";
+            cin >> n;
+        } while(n < 3 || n > 5);
 
         for(int i = 0; i < n; i++)
         {
