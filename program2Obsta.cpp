@@ -98,8 +98,14 @@ struct Obstacle {
     }
 
     void checkObstacle(int step, int xInitial, int &racerXPosition, int &racerYPosition, int &racerLocation, string racername) {
+        if (racername == "Flash") {
+            racerXPosition += 1;
+        } else if (racername == "Superman") {
+            racerXPosition -= 1;
+        }
         auto oX = find(obstacleXLocation.begin(), obstacleXLocation.end(), racerXPosition);
         auto oY = find(obstacleYLocation.begin(), obstacleYLocation.end(), racerYPosition);
+        
         if (oX != obstacleXLocation.end() && oY != obstacleYLocation.end()) {
             for (int i = 0; i<obstacleNum; i++) {
                 if ((racerXPosition == obstacleXLocation[i]) && racerYPosition == obstacleYLocation[i]) {
@@ -107,7 +113,7 @@ struct Obstacle {
                         case 'A':
                         case 'a':
                         moveBack3Step(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
-                        cout << racername << "HIT OBSTACLE!" << racername << " move back 3 step" << endl << endl;
+                        cout << racername << " HIT OBSTACLE! " << racername << " move back 3 step" << endl << endl;
                         break;
 
                         case 'B':
@@ -124,6 +130,14 @@ struct Obstacle {
                     }
                 }
             }
+        }
+
+        if (racername == "Flash") {
+            racerXPosition -= 1;
+            cout << racerXPosition;
+        } else if (racername == "Superman") {
+            racerXPosition += 1;
+            cout << racerXPosition;
         }
     }
 
@@ -438,7 +452,7 @@ void supermanMove()
     srand(time(0));
     step = 3 + (rand() % 3); //3 - 5
     supermanLocation += step;
-    cout << endl << "Superman move " << step << " steps." << endl;
+    cout << "Superman move " << step << " steps." << endl;
     
     logic(3,supermanLocation,supermanXPosition,supermanYPosition,supermanLapLeft,supermanEnded);
 }
@@ -448,7 +462,7 @@ void  batmanMove()
     srand(time(0));
     step = 3 + (rand() % 4); //3 - 6
     batmanLocation += step;
-    cout << "Batman move " << step << " steps." << endl;
+    cout << endl << "Batman move " << step << " steps." << endl;
     
     logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft,batmanEnded);
 }
@@ -469,10 +483,8 @@ int main()
         batmanMove();
         obstacle.checkObstacle(step, 2, batmanXPosition, batmanYPosition, batmanLocation, "Batman");
         supermanMove();
-        supermanXPosition -= 1;
         obstacle.checkObstacle(step, 3, supermanXPosition, supermanYPosition, supermanLocation, "Superman");
         flashMove();
-        flashXPosition += 1;
         obstacle.checkObstacle(step, 1, flashXPosition, flashYPosition, flashLocation, "Flash");
         l.printLayout();
         checkWinner();
