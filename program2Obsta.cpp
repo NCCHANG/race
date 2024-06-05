@@ -98,17 +98,14 @@ struct Obstacle {
     }
 
     void checkObstacle(int step, int xInitial, int &racerXPosition, int &racerYPosition, int &racerLocation, string racername) {
-        if (racername == "Flash") {
-            racerXPosition += 1;
-        } else if (racername == "Superman") {
-            racerXPosition -= 1;
-        }
+        bool obstacleOccur = false;
         auto oX = find(obstacleXLocation.begin(), obstacleXLocation.end(), racerXPosition);
         auto oY = find(obstacleYLocation.begin(), obstacleYLocation.end(), racerYPosition);
         
         if (oX != obstacleXLocation.end() && oY != obstacleYLocation.end()) {
             for (int i = 0; i<obstacleNum; i++) {
                 if ((racerXPosition == obstacleXLocation[i]) && racerYPosition == obstacleYLocation[i]) {
+                    obstacleOccur = true;
                     switch(obstacleFunc[i]) {
                         case 'A':
                         case 'a':
@@ -131,13 +128,10 @@ struct Obstacle {
                 }
             }
         }
-
-        if (racername == "Flash") {
+        if (obstacleOccur == false && racername == "Flash") {
             racerXPosition -= 1;
-            cout << racerXPosition;
-        } else if (racername == "Superman") {
+        } else if (obstacleOccur == false && racername == "Superman") {
             racerXPosition += 1;
-            cout << racerXPosition;
         }
     }
 
@@ -170,7 +164,7 @@ struct Obstacle {
     }
 
     void obstacleFunc_inquiry() {
-        cout << "Enter function for this obstacle (a=backward 3 step,b=back to start point, c=miss one trun): ";
+        cout << "Enter function for this obstacle (a=backward 3 step, b=back to start point, c=miss one trun): ";
         for (int i=0; i < obstacleNum; i++) { 
             cin >> abcFunc;
             obstacleFunc.push_back(abcFunc);
@@ -187,7 +181,7 @@ struct Obstacle {
         }
         else {
             cout <<"Enter Obstacle location: ";
-        for (int i=0; i < obstacleNum; i++) { // Form vector
+        for (int i=0; i < obstacleNum; i++) { 
             cin >> temp;
             obstacleLocation.push_back(temp);
         }
@@ -483,8 +477,10 @@ int main()
         batmanMove();
         obstacle.checkObstacle(step, 2, batmanXPosition, batmanYPosition, batmanLocation, "Batman");
         supermanMove();
+        supermanXPosition -= 1;
         obstacle.checkObstacle(step, 3, supermanXPosition, supermanYPosition, supermanLocation, "Superman");
         flashMove();
+        flashXPosition += 1;
         obstacle.checkObstacle(step, 1, flashXPosition, flashYPosition, flashLocation, "Flash");
         l.printLayout();
         checkWinner();
