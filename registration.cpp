@@ -329,8 +329,8 @@ void batmanMove()
 
 int main()
 {
-    RLayout layout;
-    layout.RegistrationLayout();
+    RLayout s;
+    s.RegistrationLayout();
     cout << "Please complete the following steps to register." << "\n";
     
     vector<UserRegistration> users;
