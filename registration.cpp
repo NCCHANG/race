@@ -65,6 +65,26 @@ public:
     }
 }; 
 
+class QLayout{
+public:
+    void HorizontalEqual() {
+        cout << setw(widthhh) << setfill('=') << "=" << endl;
+    }
+
+    void WelcomeMessage() {
+        cout << setw(widthhh) << setfill(' ') << " Game Start!            " << endl;
+    }
+
+    void StartLayout() {
+        HorizontalEqual();
+
+        WelcomeMessage();
+
+        HorizontalEqual();
+    }
+    
+};
+
 struct UserRegistration {
     string name;
     string email;
@@ -104,7 +124,7 @@ void Users(vector<UserRegistration>& userslist) {
 
 void PrintRegisteredUser(const vector<UserRegistration>& userslist){
     for(const UserRegistration& user : userslist){
-        cout << "Great!User " << user.name << ",you have chosen " << user.racer << " as your racer !" << "\n" << "\n" ;
+        cout << "Great! User " << user.name << ", you have chosen " << user.racer << " as your racer!" << "\n" ;
     }
 }
 
@@ -327,6 +347,11 @@ void batmanMove()
     logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft,batmanEnded);
 }
 
+void GameStart(){
+        QLayout q;
+        q.StartLayout();
+}
+
 int main()
 {
     RLayout s;
@@ -337,6 +362,8 @@ int main()
     Users(users);
     cout << "\n" ;
     PrintRegisteredUser(users);
+    cout << "\n" ;
+    GameStart();
     
     string confirmation;
     layout l;
