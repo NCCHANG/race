@@ -60,9 +60,12 @@ struct Bridge
 
         for(int i = 0; i < n; i++)
         {
-            cout << "Enter y from [1 to " << height - 2 //exclude top and bot
-                << "]: "; 
-            cin >> yinput;
+            do{
+                cout << "Enter y from [1 to " << height - 2 //exclude top and bot
+                    << "]: "; 
+                cin >> yinput;
+            } while(yinput < 1 || yinput > height-2);
+
             if (yinput < 1 || yinput > height - 2)
             {
                 cout << "WARNING! MAKE SURE THE NUMBER IS IN RANGE!\n";
