@@ -45,7 +45,9 @@ int flashLocation = 0;
 int supermanLocation = 0;
 int batmanLocation = 0;
 
-struct Obstacle {
+class Obstacle {
+
+    public:
 
     int obstacleNum, temp = 0;
     char abcFunc;
@@ -165,7 +167,7 @@ struct Obstacle {
     }
 
     void obstacleFunc_inquiry() {
-        cout << "Enter function for this obstacle (a=backward 3 step, b=back to start point, c=miss one trun): ";
+        cout << "Enter function for this obstacle (a = step back 3 step, b = back to start point, c = miss one trun): ";
         for (int i=0; i < obstacleNum; i++) { 
             cin >> abcFunc;
             obstacleFunc.push_back(abcFunc);
@@ -176,7 +178,7 @@ struct Obstacle {
     
         cout << "How many Obstacle Do You Want (5-10): ";
         cin >> obstacleNum;
-        if (obstacleNum < 3 || obstacleNum > 10){
+        if (obstacleNum < 5 || obstacleNum > 10){
             cout << "Please enter a valid Obstacle amount!" << endl;
             obstacle_inquiry();
         }
@@ -187,8 +189,8 @@ struct Obstacle {
             obstacleLocation.push_back(temp);
         }
         obstacleFunc_inquiry();
-    }
-    return obstacleLocation;
+        }
+        return obstacleLocation;
     }
 
     void printObstacleInfo() { 
