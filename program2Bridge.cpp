@@ -53,9 +53,10 @@ struct Bridge
         vector<int> bridgeYValues;
         int n, yinput;
 
-        cout << "How many bridges: ";
+        do{
+        cout << "How many bridges [1- " <<height-2 << "]: ";
         cin >> n;
-
+        }while(n < 1 || n > height-2);
         for(int i = 0; i < n; i++)
         {
             cout << "Enter y from [1 to " << height - 2 //exclude top and bot
@@ -364,7 +365,8 @@ int main()
     bridge.bridgeYValues = bridge.bridge_inquiry();
     l.printLayout(bridge.bridgeYValues);
     while (gameRunning) {
-        this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
+        // this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
+        cin.get();
         flashMove();
         supermanMove();
         batmanMove();
