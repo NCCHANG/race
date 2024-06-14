@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <chrono>
 #include <thread>
 #include <time.h>
@@ -190,24 +191,24 @@ struct Obstacle {
     return obstacleLocation;
     }
 
-    void printObstacleInfo() {  // vector<int> obstacleLocation, vector<char> abcFunc
+    void printObstacleInfo() { 
         int counter = 1;
         cout << endl;
         for (int i = 0; i<obstacleNum; i++) {
             switch(obstacleFunc[i]) {
                 case 'A':
                 case 'a':
-                cout << "Obstacle " << counter << ":" << "  Location: " << obstacleLocation[i] << "  Function: Move Back 3 step" << endl;
+                cout << "Obstacle " << counter << ":" << setw(2) << "  Location: " << obstacleLocation[i] << setw(3) << "  Function: Move Back 3 step" << endl;
                 break;
 
                 case 'B':
                 case 'b':
-                cout << "Obstacle " << counter << ":" << "  Location: " << obstacleLocation[i] << "  Function: Back To Initial Position" << endl;
+                cout << "Obstacle " << counter << ":" << setw(2) << "  Location: " << obstacleLocation[i] << setw(3) << "  Function: Back To Initial Position" << endl;
                 break;
 
                 case 'C':
                 case 'c':
-                cout << "Obstacle " << counter << ":" << "  Location: " << obstacleLocation[i] << "  Function: Miss One Turn" << endl;
+                cout << "Obstacle " << counter << ":" << setw(2) << "  Location: " << obstacleLocation[i] << setw(3) << "  Function: Miss One Turn" << endl;
                 break;
             }
             counter++;
