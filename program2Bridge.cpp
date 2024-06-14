@@ -366,7 +366,8 @@ int main()
     bridge.bridgeYValues = bridge.bridge_inquiry();
     l.printLayout(bridge.bridgeYValues);
     while (gameRunning) {
-        this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
+        // this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
+        cin.get();
         flashMove();
         supermanMove();
         batmanMove();
