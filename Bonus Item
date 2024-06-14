@@ -1,7 +1,5 @@
 #include <iostream>
 #include <chrono>
-#include <vector>
-#include <algorithm>
 #include <thread>
 #include <time.h>
 
@@ -44,179 +42,173 @@ int flashLocation = 0;
 int supermanLocation = 0;
 int batmanLocation = 0;
 
-struct Bridge
-{
-    vector<int> bridgeYValues;
 
-    vector<int> bridge_inquiry() 
-    {
-        vector<int> bridgeYValues;
-        int n, yinput;
-        
-        do {
-            cout << "How many bridges (3-5): ";
-            cin >> n;
-        } while(n < 3 || n > 5);
+//Bonus Item
+int bonusXPosition = 0;
+int bonusYPosition = 0;
 
-        for(int i = 0; i < n; i++)
-        {
-            cout << "Enter y from [1 to " << height - 2 //exclude top and bot
-                << "]: "; 
-            cin >> yinput;
-            if (yinput < 1 || yinput > height - 2)
-            {
-                cout << "WARNING! MAKE SURE THE NUMBER IS IN RANGE!\n";
-                i--;
-                continue;
-            }
-            bridgeYValues.push_back(yinput);
-        }
-        return bridgeYValues;
-    }
-
-    int returnLocation(int coordinateX, int racerX,
-             int racerY, int coordinateY = height - 1)
-    {
-    int coordinate = 0;
-    while (coordinate < (box + 10)) {
-
-        if (racerX == coordinateX && racerY == coordinateY) {
-            break;
-        }
-
-        if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
-            coordinateX += 4;
-        } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
-            coordinateY += 1;
-        }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
-            coordinateX -= 4;
-        } else if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
-            coordinateY -= 1;
-        }
-        
-        coordinate ++;
-
-    }
-        return coordinate;
-    }
-
-    //oriX is the initial x value eg:1,2,3
-    void checkIfAtBridgeNMove(int oriX,int& x, int y, int& location)
-    {
-        vector<int>::iterator r = 
-        find(bridgeYValues.begin(),bridgeYValues.end(),y);
-        if (r != bridgeYValues.end())
-        {
-            switch(x)
-            {
-                case 1:
-                x = width - 4;
-                break;
-                case 2:
-                x = width - 3;
-                break;
-                case 3:
-                x = width - 2;
-                break;
-            }
-            location = returnLocation(oriX,x,y);
-        }
-    }
-
-} bridge;
-
-class layout {
-    void plusMinus(int x) { //+---+---+ (depends on the x)
-        if (x%4 == 0) {
+class Layout {
+public:
+    void plusMinus(int x) { // +---+---+ (depends on the x)
+        if (x % 4 == 0) {
             cout << '+';
         } else {
             cout << '-';
         }
     }
 
-    void plusMinusNotBorder(int x) { //+---+                +---+ (depends on the x)
-        if ( x <= 4 || x >= width - 5) {
+    void plusMinusNotBorder(int x) { // +---+                +---+ (depends on the x)
+        if (x <= 4 || x >= width - 5) {
             plusMinus(x);
         } else {
             cout << ' ';
         }
     }
 
-    void straightLineBorder (int x, int y) { //|   |   |   |   |   |   |   | (depends on the x)
-        if (x%4 == 0) {
-                cout << '|';
-            } else if (x == flashXPosition && y == flashYPosition) {
-            cout << flash;  
-            } else if (x == supermanXPosition && y == supermanYPosition) {
-            cout << superman;
-            } else if (x == batmanXPosition && y == batmanYPosition) {
-            cout << batman;
-            } else {
-                cout << ' ';
-            }
-    }
-
-    void straightLineNotBorder (int x, int y, vector<int> bridgeHeights) { //|   |                |   | (depends on x)
-        
-        vector<int>::iterator r = find(bridgeHeights.begin(),bridgeHeights.end(),y);
-        bool found = (r != bridgeHeights.end()) ? true : false;
-
-        if ( x==0 || x==4 && !found || x==width - 5 && !found || x==width - 1) {
+    void straightLineBorder(int x, int y) { // |   |   |   |   |   |   |   | (depends on the x)
+        if (x % 4 == 0) {
             cout << '|';
         } else if (x == flashXPosition && y == flashYPosition) {
-            cout << flash;    
+            cout << flash;
         } else if (x == supermanXPosition && y == supermanYPosition) {
             cout << superman;
         } else if (x == batmanXPosition && y == batmanYPosition) {
             cout << batman;
-        }
-        else {
+        } else if (x == bonusXPosition && y == bonusYPosition) {
+            cout << '*';
+        } else {
             cout << ' ';
         }
     }
-    
-    public:
 
-    void printLayout(vector<int> bridgeHeights = {}) {
-        for (int x = 0; x < width; x++) // +---+---+---
-        {
+    void straightLineNotBorder(int x, int y) { // |   |                |   | (depends on x)
+        if (x == 0 || x == 4 || x == width - 5 || x == width - 1) {
+            cout << '|';
+        } else if (x == flashXPosition && y == flashYPosition) {
+            cout << flash;
+        } else if (x == supermanXPosition && y == supermanYPosition) {
+            cout << superman;
+        } else if (x == batmanXPosition && y == batmanYPosition) {
+            cout << batman;
+        } else if (x == bonusXPosition && y == bonusYPosition) {
+            cout << '*';
+        } else {
+            cout << ' ';
+        }
+    }
+
+    void printLayout() {
+        for (int x = 0; x < width; x++) { // +---+---+---
             plusMinus(x);
         }
 
-
-        for (int y = 0; y < height; y++)
-        {
+        for (int y = 0; y < height; y++) {
             cout << '\n';
-            //|   |    | section
-            for (int x = 0; x < width; x++) //|   |   |   |   | 
-            {
-                if (y == 0 || y == height-1) {
+            // |   |    | section
+            for (int x = 0; x < width; x++) { // |   |   |   |   | 
+                if (y == 0 || y == height - 1) {
                     straightLineBorder(x, y);
-                }
-                else {
-                    straightLineNotBorder(x, y, bridgeHeights);
+                } else {
+                    straightLineNotBorder(x, y);
                 }
             }
 
             cout << '\n';
-            //plusminus section
-            for (int x = 0; x < width; x++) // +---+---+---
-            {
-                vector<int>::iterator r = find(bridgeHeights.begin(),bridgeHeights.end(),y+1);
-                bool found_bridgeYPlusOne = (r != bridgeHeights.end()) ? true : false; // bridge top
-
-                r = find(bridgeHeights.begin(),bridgeHeights.end(),y); //bridge bot
-                bool found_bridgeY = (r != bridgeHeights.end()) ? true : false;
-                if (y==0 || y==height-2 || found_bridgeYPlusOne
-                || found_bridgeY || y==height-1)
-                {
+            // plusminus section
+            for (int x = 0; x < width; x++) { // +---+---+---
+                if (y == 0 || y == height - 2 || y == height - 1) {
                     plusMinus(x);
                 } else {
                     plusMinusNotBorder(x);
                 }
             }
         }
-        }
+    }
+};
+
+class Bonus {
+private:
+    int bonusQuantity;
+    string bonusType;
+
+public:
+    Bonus() : bonusQuantity(1), bonusType("Coin") 
+    {
+        srand(time(0)); // Seed the random number generator
+        getBonusCoordinate(); // Generate a random bonus coordinate
+    }
+
+    void getBonusCoordinate() {
+        bonusXPosition = rand() % width; 
+        bonusYPosition = rand() % height; 
+    }
+
+    void displayBonusInfo() {
+        cout << "Bonus Type: " << bonusType << endl;
+        cout << "Bonus Quantity: " << bonusQuantity << endl;
+    }
+
+    // Getter and setter methods
+    int getBonusQuantity() const {
+        return bonusQuantity;
+    }
+
+    void setBonusQuantity(int quantity) {
+        bonusQuantity = quantity;
+    }
+
+    string getBonusType() const {
+        return bonusType;
+    }
+
+    void setBonusType(const string& type) {
+        bonusType = type;
+    }
+
+    // Bonus type specific methods
+    void applyBonusType1(int& racerLocation) {
+        racerLocation += 4;
+        cout << "You moved forward 4 steps!" << endl;
+    }
+
+    void applyBonusType2(int& step) {
+        step *= 2;
+        cout << "Your steps are now doubled!" << endl;
+    }
+
+    void applyBonusType3(bool& playerTurn) {
+        cout << "You got an extra turn!" << endl;
+        playerTurn = true;
+    }
+
+   void applyBonus(int bonusType, int& racerLocation, int& step, bool& playerTurn) {
+       switch (bonusType) {
+           case 1:
+               increaseRacerLocation(racerLocation, 4);
+               break;
+           case 2:
+               doubleStep(step);
+               break;
+           case 3:
+               grantExtraTurn(playerTurn);
+               break;
+           default:
+               break;
+       }
+   }
+
+   void increaseRacerLocation(int& racerLocation, int increment) 
+{
+       racerLocation += 4;
+   }
+
+   void doubleStep(int& step) {
+       step *= 2;
+   }
+
+   void grantExtraTurn(bool& playerTurn) {
+       playerTurn = true;
+   }
 };
 
 void checkWinner()
@@ -358,27 +350,17 @@ void batmanMove()
 int main()
 {
     string confirmation;
-    layout l;
+    Layout;
     box_inquiry();
-    l.printLayout();
-    cout << '\n';
     lap_inquiry();
-    bridge.bridgeYValues = bridge.bridge_inquiry();
-    l.printLayout(bridge.bridgeYValues);
+    l.printLayout();
     while (gameRunning) {
-        // this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
-        cin.get();
+        this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
         flashMove();
         supermanMove();
         batmanMove();
-        bridge.checkIfAtBridgeNMove(1,flashXPosition,
-                                flashYPosition,flashLocation);
-        bridge.checkIfAtBridgeNMove(3,supermanXPosition,
-                                supermanYPosition,supermanLocation);
-        bridge.checkIfAtBridgeNMove(2,batmanXPosition,
-                                batmanYPosition,batmanLocation);
         checkWinner();
-        l.printLayout(bridge.bridgeYValues);
+        l.printLayout();
     }
     cout << endl;
     system("pause");

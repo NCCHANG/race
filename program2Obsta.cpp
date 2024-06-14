@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <chrono>
 #include <thread>
 #include <time.h>
@@ -55,10 +56,8 @@ struct Obstacle {
     vector<int> obstacleYLocation;
     vector<char> obstacleFunc;
 
-    void move3Back(int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
-        
+    void calculateXY(int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
         int coordinate = 0;
-        racerLocation = racerLocation - 3;
         while (coordinate < (box + 10)) {
 
             if (coordinate == racerLocation) {
@@ -79,62 +78,61 @@ struct Obstacle {
             
             coordinate++;
         } 
+    }
+
+    void moveBack3Step(int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
+        
+        racerLocation = racerLocation - 3;
+        calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
 
     void backToInitial(int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
-    
-        int coordinate = 0;
+
         racerLocation = racerLocation - racerLocation;
-        while (coordinate < (box + 10)) {
-
-            if (coordinate == racerLocation) {
-                racerxCoordinate = xCoordinate; 
-                raceryCoordinate = yCoordinate;
-                break;
-            }
-
-            if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
-                xCoordinate += 4;
-            } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
-                yCoordinate += 1;
-            }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
-                xCoordinate -= 4;
-            } else if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
-                yCoordinate -= 1;
-            }
-            
-            coordinate++;
-        } 
+        calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
 
-    void missTurn() {
-
+    void missTurn(int step, int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
+        
+        racerLocation = racerLocation - step;
+        calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
 
-    void checkObstacle(int xInitial, int &racerXPosition, int &racerYPosition, int &racerLocation) {
+    void checkObstacle(int step, int xInitial, int &racerXPosition, int &racerYPosition, int &racerLocation, string racername) {
+        bool obstacleOccur = false;
         auto oX = find(obstacleXLocation.begin(), obstacleXLocation.end(), racerXPosition);
         auto oY = find(obstacleYLocation.begin(), obstacleYLocation.end(), racerYPosition);
+        
         if (oX != obstacleXLocation.end() && oY != obstacleYLocation.end()) {
             for (int i = 0; i<obstacleNum; i++) {
                 if ((racerXPosition == obstacleXLocation[i]) && racerYPosition == obstacleYLocation[i]) {
+                    obstacleOccur = true;
                     switch(obstacleFunc[i]) {
                         case 'A':
                         case 'a':
-                        move3Back(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                        moveBack3Step(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                        cout << racername << " HIT OBSTACLE! " << racername << " move back 3 step" << endl << endl;
                         break;
 
                         case 'B':
                         case 'b':
                         backToInitial(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                        cout << racername << " HIT OBSTACLE! " << racername << " move back to initial start point" << endl << endl;
                         break;
 
                         case 'C':
                         case 'c':
-                        missTurn();
+                        missTurn(step, xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                        cout << racername << " HIT OBSTACLE! " << racername << " miss his current turn" << endl << endl;
                         break;
                     }
                 }
             }
+        }
+        if (obstacleOccur == false && racername == "Flash") {
+            racerXPosition -= 1;
+        } else if (obstacleOccur == false && racername == "Superman") {
+            racerXPosition += 1;
         }
     }
 
@@ -167,7 +165,7 @@ struct Obstacle {
     }
 
     void obstacleFunc_inquiry() {
-        cout << "Enter function for this obstacle (a=backward 3 step, b=backward 5 step, c=miss one trun): ";
+        cout << "Enter function for this obstacle (a=backward 3 step, b=back to start point, c=miss one trun): ";
         for (int i=0; i < obstacleNum; i++) { 
             cin >> abcFunc;
             obstacleFunc.push_back(abcFunc);
@@ -184,7 +182,7 @@ struct Obstacle {
         }
         else {
             cout <<"Enter Obstacle location: ";
-        for (int i=0; i < obstacleNum; i++) { // Form vector
+        for (int i=0; i < obstacleNum; i++) { 
             cin >> temp;
             obstacleLocation.push_back(temp);
         }
@@ -193,24 +191,24 @@ struct Obstacle {
     return obstacleLocation;
     }
 
-    void printObstacleInfo() {  // vector<int> obstacleLocation, vector<char> abcFunc
+    void printObstacleInfo() { 
         int counter = 1;
         cout << endl;
         for (int i = 0; i<obstacleNum; i++) {
             switch(obstacleFunc[i]) {
                 case 'A':
                 case 'a':
-                cout << "Obstacle " << counter << ":" << "  Location: " << obstacleLocation[i] << "  Function: Move Back 3 step" << endl;
+                cout << "Obstacle " << counter << ":" << setw(2) << "  Location: " << obstacleLocation[i] << setw(3) << "  Function: Move Back 3 step" << endl;
                 break;
 
                 case 'B':
                 case 'b':
-                cout << "Obstacle " << counter << ":" << "  Location: " << obstacleLocation[i] << "  Function: Back To Initial Position" << endl;
+                cout << "Obstacle " << counter << ":" << setw(2) << "  Location: " << obstacleLocation[i] << setw(3) << "  Function: Back To Initial Position" << endl;
                 break;
 
                 case 'C':
                 case 'c':
-                cout << "Obstacle " << counter << ":" << "  Location: " << obstacleLocation[i] << "  Function: Miss One Turn" << endl;
+                cout << "Obstacle " << counter << ":" << setw(2) << "  Location: " << obstacleLocation[i] << setw(3) << "  Function: Miss One Turn" << endl;
                 break;
             }
             counter++;
@@ -439,7 +437,7 @@ void flashMove()
     srand(time(0));
     step = 2 + (rand() % 5); // 2 - 6
     flashLocation += step;
-    cout << endl << "Flash move " << step << " steps." << endl;
+    cout << "Flash move " << step << " steps." << endl;
     
     logic(1,flashLocation,flashXPosition,flashYPosition,flashLapLeft,flashEnded);
 }
@@ -454,12 +452,12 @@ void supermanMove()
     logic(3,supermanLocation,supermanXPosition,supermanYPosition,supermanLapLeft,supermanEnded);
 }
 
-void batmanMove()
+void  batmanMove()
 {
     srand(time(0));
     step = 3 + (rand() % 4); //3 - 6
     batmanLocation += step;
-    cout << "Batman move " << step << " steps." << endl;
+    cout << endl << "Batman move " << step << " steps." << endl;
     
     logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft,batmanEnded);
 }
@@ -477,14 +475,14 @@ int main()
     cout << endl;
     while (gameRunning) {
         this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
-        supermanXPosition -= 1;
-        obstacle.checkObstacle(3, supermanXPosition, supermanYPosition, supermanLocation);
-        flashXPosition += 1;
-        obstacle.checkObstacle(1, flashXPosition, flashYPosition, flashLocation);
-        obstacle.checkObstacle(2, batmanXPosition, batmanYPosition, batmanLocation);
-        flashMove();
-        supermanMove();
         batmanMove();
+        obstacle.checkObstacle(step, 2, batmanXPosition, batmanYPosition, batmanLocation, "Batman");
+        supermanMove();
+        supermanXPosition -= 1;
+        obstacle.checkObstacle(step, 3, supermanXPosition, supermanYPosition, supermanLocation, "Superman");
+        flashMove();
+        flashXPosition += 1;
+        obstacle.checkObstacle(step, 1, flashXPosition, flashYPosition, flashLocation, "Flash");
         l.printLayout();
         checkWinner();
         cout << endl;
