@@ -45,7 +45,9 @@ int flashLocation = 0;
 int supermanLocation = 0;
 int batmanLocation = 0;
 
-struct Obstacle {
+class Obstacle {
+
+    public:
 
     int obstacleNum, temp = 0;
     char abcFunc;
