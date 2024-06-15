@@ -171,16 +171,16 @@ void checkWinner()
     } else if ((batmanLocation == flashLocation == supermanLocation) && 
                 (batmanEnded == true && flashEnded == true && supermanEnded == true))
     {
-        cout << "Draw!";
+        cout << endl << "Draw!" << endl;
     } else if (supermanLocation == flashLocation && flashEnded == true && supermanEnded == true)
     {
-        cout << "Draw!";
+        cout << endl << "Draw!" << endl;
     } else if (supermanLocation == batmanLocation && batmanEnded == true && supermanEnded == true)
     {
-        cout << "Draw!";
+        cout << endl << "Draw!" << endl;
     } else if (batmanLocation == flashLocation && flashEnded == true && batmanEnded == true)
     {
-        cout << "Draw!";
+        cout << endl << "Draw!" << endl;
     }
 }
 
