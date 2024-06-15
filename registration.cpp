@@ -92,9 +92,9 @@ struct UserRegistration {
 };
 
 void Users(vector<UserRegistration>& userslist) {
-    string Batman = "Batman";
-    string Flash = "Flash";
-    string Superman = "Superman";
+    string batman = "batman";
+    string flash = "flash";
+    string superman = "superman";
     
     for (int i = 0; i < 3; i++) {
         string name, email, racer;
@@ -112,10 +112,10 @@ void Users(vector<UserRegistration>& userslist) {
             cout << "Select your racer (Batman, Flash, Superman): ";
             getline(cin, racer);
             
-        if(racer != Batman && racer != Flash && racer != Superman ){
+        if(racer != batman && racer != flash && racer != superman ){
             cout << "The racer u hv chosen is not available. Please ur racer again!" << "\n" ;
             }
-        }while (racer != Batman && racer != Flash && racer != Superman );
+        }while (racer != batman && racer != flash && racer != superman );
         
         
         userslist.push_back({name, email, racer});
@@ -211,17 +211,35 @@ class layout {
         }
 };
 
-void checkWinner()
+void checkWinner(const std::vector<UserRegistration>& userslist) //rmb to accept userlists as parameterrrrrr!!!
 {
     if (flashLocation > supermanLocation && flashLocation > batmanLocation && flashEnded == true) {
         cout << endl << "Flash Won!" << endl;
         gameRunning = false;
+        for(const UserRegistration&user : userslist){
+            if(user.racer == "flash"){
+                cout << "Congrats player "<< user.name << "!" << "Your racer Flash has won the race !" << "\n" ;
+                return;
+            }
+        }
     } else if (supermanLocation > flashLocation && supermanLocation > batmanLocation && supermanEnded == true) {
         cout << endl << "Superman Won!" << endl;
         gameRunning = false;
+        for(const UserRegistration&user : userslist){
+            if(user.racer == "superman"){
+                cout << "Congrats player "<< user.name << "!" << "Your racer Superman has won the race!" << "\n";
+                return;
+            }
+        }
     } else if (batmanLocation > supermanLocation && batmanLocation > flashLocation && batmanEnded == true) {
         cout << endl << "Batman Won!" << endl;
         gameRunning = false;
+        for(const UserRegistration&user : userslist){
+            if (user.racer == "batman"){
+                cout << "Congrats player "<< user.name << "!" << "Your racer Batman has won the race!" << "\n";
+                return;
+            }
+        }
     } else if ((batmanLocation == flashLocation == supermanLocation) && 
                 (batmanEnded == true && flashEnded == true && supermanEnded == true))
     {
@@ -375,7 +393,7 @@ int main()
         flashMove();
         supermanMove();
         batmanMove();
-        checkWinner();
+        checkWinner(users);
         l.printLayout();
     }
     cout << endl;
