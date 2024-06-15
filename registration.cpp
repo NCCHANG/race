@@ -85,13 +85,13 @@ public:
     
 };
 
-struct UserRegistration {
+struct Player {
     string name;
     string email;
     string racer;
 };
 
-void Users(vector<UserRegistration>& userslist) {
+void Users(vector<Player>& userslist) {
     string batman = "batman";
     string flash = "flash";
     string superman = "superman";
@@ -122,8 +122,8 @@ void Users(vector<UserRegistration>& userslist) {
     }
 }
 
-void PrintRegisteredUser(const vector<UserRegistration>& userslist){
-    for(const UserRegistration& user : userslist){
+void PrintRegisteredUser(const vector<Player>& userslist){
+    for(const Player& user : userslist){
         cout << "Great! User " << user.name << ", you have chosen " << user.racer << " as your racer!" << "\n" ;
     }
 }
@@ -211,12 +211,12 @@ class layout {
         }
 };
 
-void checkWinner(const std::vector<UserRegistration>& userslist) //rmb to accept userlists as parameterrrrrr!!!
+void checkWinner(const std::vector<Player>& userslist) //rmb to accept userlists as parameterrrrrr!!!
 {
     if (flashLocation > supermanLocation && flashLocation > batmanLocation && flashEnded == true) {
         cout << endl << "Flash Won!" << endl;
         gameRunning = false;
-        for(const UserRegistration&user : userslist){
+        for(const Player&user : userslist){
             if(user.racer == "flash"){
                 cout << "Congrats player "<< user.name << "!" << "Your racer Flash has won the race !" << "\n" ;
                 return;
@@ -225,7 +225,7 @@ void checkWinner(const std::vector<UserRegistration>& userslist) //rmb to accept
     } else if (supermanLocation > flashLocation && supermanLocation > batmanLocation && supermanEnded == true) {
         cout << endl << "Superman Won!" << endl;
         gameRunning = false;
-        for(const UserRegistration&user : userslist){
+        for(const Player&user : userslist){
             if(user.racer == "superman"){
                 cout << "Congrats player "<< user.name << "!" << "Your racer Superman has won the race!" << "\n";
                 return;
@@ -234,7 +234,7 @@ void checkWinner(const std::vector<UserRegistration>& userslist) //rmb to accept
     } else if (batmanLocation > supermanLocation && batmanLocation > flashLocation && batmanEnded == true) {
         cout << endl << "Batman Won!" << endl;
         gameRunning = false;
-        for(const UserRegistration&user : userslist){
+        for(const Player&user : userslist){
             if (user.racer == "batman"){
                 cout << "Congrats player "<< user.name << "!" << "Your racer Batman has won the race!" << "\n";
                 return;
@@ -376,7 +376,7 @@ int main()
     s.RegistrationLayout();
     cout << "Please complete the following steps to register." << "\n";
     
-    vector<UserRegistration> users;
+    vector<Player> users;
     Users(users);
     cout << "\n" ;
     PrintRegisteredUser(users);
