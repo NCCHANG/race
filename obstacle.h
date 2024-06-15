@@ -146,7 +146,7 @@ class Obstacle {
             obstacle_inquiry();
         }
         else {
-            cout <<"Enter Obstacle location: ";
+            cout <<"Enter Obstacle location (1- " << box-1 << "): ";
         for (int i=0; i < obstacleNum; i++) { 
             cin >> temp;
             obstacleLocation.push_back(temp);
