@@ -1,13 +1,3 @@
-#include <iostream>
-#include <iomanip>
-#include <chrono>
-#include <thread>
-#include <time.h>
-#include <vector>
-#include <algorithm>
-
-using namespace std;
-
 class Obstacle {
 
     public:
