@@ -2,9 +2,14 @@
 #include <chrono>
 #include <thread>
 #include <time.h>
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 using namespace std::chrono;
+
 
 //configuration
 int height = 11;
@@ -42,174 +47,219 @@ int flashLocation = 0;
 int supermanLocation = 0;
 int batmanLocation = 0;
 
-
 //Bonus Item
-int bonusXPosition = 0;
-int bonusYPosition = 0;
+int bonusX = 0;
+int bonusY = 0;
 
-class Layout {
-public:
-    void plusMinus(int x) { // +---+---+ (depends on the x)
-        if (x % 4 == 0) {
+
+class layout {
+    void plusMinus(int x) { //+---+---+ (depends on the x)
+        if (x%4 == 0) {
             cout << '+';
         } else {
             cout << '-';
         }
     }
 
-    void plusMinusNotBorder(int x) { // +---+                +---+ (depends on the x)
-        if (x <= 4 || x >= width - 5) {
+    void plusMinusNotBorder(int x) { //+---+                +---+ (depends on the x)
+        if ( x <= 4 || x >= width - 5) {
             plusMinus(x);
         } else {
             cout << ' ';
         }
     }
 
-    void straightLineBorder(int x, int y) { // |   |   |   |   |   |   |   | (depends on the x)
-        if (x % 4 == 0) {
-            cout << '|';
-        } else if (x == flashXPosition && y == flashYPosition) {
-            cout << flash;
-        } else if (x == supermanXPosition && y == supermanYPosition) {
-            cout << superman;
-        } else if (x == batmanXPosition && y == batmanYPosition) {
-            cout << batman;
-        } else if (x == bonusXPosition && y == bonusYPosition) {
-            cout << '*';
-        } else {
-            cout << ' ';
-        }
+    void straightLineBorder (int x, int y) { //|   |   |   |   |   |   |   | (depends on the x)
+        if (x%4 == 0) {
+                cout << '|';
+            } else if (x == flashXPosition && y == flashYPosition) {
+                cout << flash;  
+            } else if (x == supermanXPosition && y == supermanYPosition) {
+                cout << superman;
+            } else if (x == batmanXPosition && y == batmanYPosition) {
+                cout << batman;
+            } else if (x == bonusX && y == bonusY){
+                cout << 'O';
+            } else {
+                cout << ' ';
+            }
     }
 
-    void straightLineNotBorder(int x, int y) { // |   |                |   | (depends on x)
-        if (x == 0 || x == 4 || x == width - 5 || x == width - 1) {
+    void straightLineNotBorder (int x, int y) { //|   |                |   | (depends on x)
+        if ( x==0 || x==4 || x==width - 5 || x==width - 1) {
             cout << '|';
         } else if (x == flashXPosition && y == flashYPosition) {
-            cout << flash;
+            cout << flash;    
         } else if (x == supermanXPosition && y == supermanYPosition) {
             cout << superman;
         } else if (x == batmanXPosition && y == batmanYPosition) {
             cout << batman;
-        } else if (x == bonusXPosition && y == bonusYPosition) {
-            cout << '*';
-        } else {
+        } else if (x == bonusX && y == bonusY){
+            cout << 'O';
+        }else {
             cout << ' ';
         }
     }
+    
+    public:
 
     void printLayout() {
-        for (int x = 0; x < width; x++) { // +---+---+---
+        for (int x = 0; x < width; x++) // +---+---+---
+        {
             plusMinus(x);
         }
 
-        for (int y = 0; y < height; y++) {
+
+        for (int y = 0; y < height; y++)
+        {
             cout << '\n';
-            // |   |    | section
-            for (int x = 0; x < width; x++) { // |   |   |   |   | 
-                if (y == 0 || y == height - 1) {
+            //|   |    | section
+            for (int x = 0; x < width; x++) //|   |   |   |   | 
+            {
+                if (y == 0 || y == height-1) {
                     straightLineBorder(x, y);
-                } else {
+                }
+                else {
                     straightLineNotBorder(x, y);
                 }
             }
 
             cout << '\n';
-            // plusminus section
-            for (int x = 0; x < width; x++) { // +---+---+---
-                if (y == 0 || y == height - 2 || y == height - 1) {
+            //plusminus section
+            for (int x = 0; x < width; x++) // +---+---+---
+            {
+                if (y==0 || y==height-2 || y==height-1)
+                {
                     plusMinus(x);
                 } else {
                     plusMinusNotBorder(x);
                 }
             }
         }
-    }
+        }
 };
 
-class Bonus {
-private:
-    int bonusQuantity;
-    string bonusType;
 
-public:
-    Bonus() : bonusQuantity(1), bonusType("Coin") 
-    {
-        srand(time(0)); // Seed the random number generator
-        getBonusCoordinate(); // Generate a random bonus coordinate
+// Bonus Item
+struct Bonus {
+    int bonusNum = 0;
+    vector<int> bonusX;
+    vector<int> bonusY;
+    vector<int> bonusFunc;
+    vector<int> bonusLocation;
+
+    void initializeBonusPositions() {
+        for (int i = 0; i < bonusNum; i++) {
+            int x = getRandomNumber(0, width - 1);
+            int y = getRandomNumber(1, height - 2);
+            bonusX.push_back(x);
+            bonusY.push_back(y);
+            bonusFunc.push_back(getRandomBonusFunction());
+            bonusLocation.push_back(0);
+        }
     }
 
-    void getBonusCoordinate() {
-        bonusXPosition = rand() % width; 
-        bonusYPosition = rand() % height; 
+    int getRandomNumber(int min, int max) {
+        return rand() % (max - min + 1) + min;
+    }
+
+    int getRandomBonusFunction() {
+        return rand() % 3 + 1;
+    }
+
+    void calculateXY(int &bonusX, int &bonusY, int racerLocation, int &racerX, int &racerY) {
+        int coordinate = 0;
+        while (coordinate < (box + 10)) {
+            if (coordinate == racerLocation) {
+                racerX = bonusX;
+                racerY = bonusY;
+                break;
+            }
+
+            if ((coordinate >= 0 && coordinate < 10) || coordinate >= (0 + box)) {
+                bonusX += 4;
+            } else if (coordinate >= 10 && coordinate < 20) {
+                bonusY += 1;
+            } else if (coordinate >= 20 && coordinate < 30) {
+                bonusX -= 4;
+            } else if (coordinate < 0 || (coordinate < (0 + box) && coordinate >= box)) {
+                bonusY -= 1;
+            }
+            coordinate++;
+        }
+    }
+
+    void moveForth(int xInitial, int height, int &racerLocation, int &racerX, int &racerY) {
+        racerLocation += 3;
+        calculateXY(xInitial, height, racerLocation, racerX, racerY);
+    }
+
+    void doubleSteps(int xInitial, int height, int &racerLocation, int &racerX, int &racerY) {
+        racerLocation *= 2;
+        calculateXY(xInitial, height, racerLocation, racerX, racerY);
+    }
+
+    void extraTurn(int step, int xInitial, int height, int &racerLocation, int &racerX, int &racerY) {
+        racerLocation += step;
+        calculateXY(xInitial, height, racerLocation, racerX, racerY);
+    }
+
+    void bonusItem_option(int &racerLocation, int &racerX, int &racerY, string racername, vector<int> &bonusFunc, int xInitial, int height, int step) {
+        cout << "Enter input to use your bonus item (y = Use Bonus, x = Keep Bonus): ";
+        char choice;
+        cin >> choice;
+        if (choice == 'y' || choice == 'Y') { // Logic to use the bonus immediately
+            int bonusType = bonusFunc.back();
+            if (bonusType == 1) {
+                moveForth(xInitial, height - 1, racerLocation, racerX, racerY);
+                cout << racername << " BONUS ITEM OBTAINED! " << racername << " move forward 3 steps" << endl << endl;
+            } else if (bonusType == 2) {
+                doubleSteps(xInitial, height - 1, racerLocation, racerX, racerY);
+                cout << racername << " BONUS ITEM OBTAINED! " << racername << ", your steps have been doubled" << endl << endl;
+            } else if (bonusType == 3) {
+                extraTurn(step, xInitial, height - 1, racerLocation, racerX, racerY);
+                cout << racername << " BONUS ITEM OBTAINED! " << racername << " you got an extra turn" << endl << endl;
+            }
+            bonusFunc.pop_back(); // Remove the used bonus item
+        } else if (choice == 'x' || choice == 'X') {
+            // Logic to store the bonus for later use
+            cout << "Bonus item stored for later use." << endl;
+        }
+    }
+
+    void bonusItem_inquiry() {
+        cout << "State the number of Bonus items you desire (2-6): ";
+        cin >> bonusNum;
+        while (bonusNum < 2 || bonusNum > 6) {
+            cout << "Please enter a value within the range." << endl;
+            cin >> bonusNum;
+        }
+        cout << "Your Bonus items will be randomly generated." << endl;
+        cout << "Remember, to use your Bonus item, click 'Y'." << endl;
+        cout << "If you wish to keep your Bonus item, click 'X'." << endl;
     }
 
     void displayBonusInfo() {
-        cout << "Bonus Type: " << bonusType << endl;
-        cout << "Bonus Quantity: " << bonusQuantity << endl;
+        int counter = 1;
+        cout << endl;
+        for (int i = 0; i < bonusNum; i++) {
+            switch (bonusFunc[i]) {
+                case 1:
+                    cout << "Bonus Item " << counter << ": Location: (" << bonusX[i] << ", " << bonusY[i] << ") (Move Forward 3 steps)" << endl;
+                    break;
+                case 2:
+                    cout << "Bonus Item " << counter << ": Location: (" << bonusX[i] << ", " << bonusY[i] << ") (Steps got doubled)" << endl;
+                    break;
+                case 3:
+                    cout << "Bonus Item " << counter << ": Location: (" << bonusX[i] << ", " << bonusY[i] << ") (Extra turn)" << endl;
+                    break;
+            }
+            counter++;
+        }
+        cout << endl;
     }
-
-    // Getter and setter methods
-    int getBonusQuantity() const {
-        return bonusQuantity;
-    }
-
-    void setBonusQuantity(int quantity) {
-        bonusQuantity = quantity;
-    }
-
-    string getBonusType() const {
-        return bonusType;
-    }
-
-    void setBonusType(const string& type) {
-        bonusType = type;
-    }
-
-    // Bonus type specific methods
-    void applyBonusType1(int& racerLocation) {
-        racerLocation += 4;
-        cout << "You moved forward 4 steps!" << endl;
-    }
-
-    void applyBonusType2(int& step) {
-        step *= 2;
-        cout << "Your steps are now doubled!" << endl;
-    }
-
-    void applyBonusType3(bool& playerTurn) {
-        cout << "You got an extra turn!" << endl;
-        playerTurn = true;
-    }
-
-   void applyBonus(int bonusType, int& racerLocation, int& step, bool& playerTurn) {
-       switch (bonusType) {
-           case 1:
-               increaseRacerLocation(racerLocation, 4);
-               break;
-           case 2:
-               doubleStep(step);
-               break;
-           case 3:
-               grantExtraTurn(playerTurn);
-               break;
-           default:
-               break;
-       }
-   }
-
-   void increaseRacerLocation(int& racerLocation, int increment) 
-{
-       racerLocation += 4;
-   }
-
-   void doubleStep(int& step) {
-       step *= 2;
-   }
-
-   void grantExtraTurn(bool& playerTurn) {
-       playerTurn = true;
-   }
 };
+
 
 void checkWinner()
 {
@@ -350,9 +400,13 @@ void batmanMove()
 int main()
 {
     string confirmation;
-    Layout;
+    layout l;
+    Bonus bonus;
     box_inquiry();
     lap_inquiry();
+    bonus.bonusItem_inquiry();
+    bonus.initializeBonusPositions();
+    bonus.displayBonusInfo();
     l.printLayout();
     while (gameRunning) {
         this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
