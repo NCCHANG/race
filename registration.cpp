@@ -85,48 +85,73 @@ public:
     
 };
 
-struct Player {
+class Player {
+public:
     string name;
     string email;
     string racer;
+
+public:
+    static std::vector<Player> userslist; // allows all instances of 'Player' to share the same userslist.
+    // Constructor
+    Player(const string& name="", const string& email="", const string& racer="")
+        : name(name), email(email), racer(racer) {}
+
+    // Function to register users
+    static void registerUsers() {
+        string batman = "batman";
+        string flash = "flash";
+        string superman = "superman";
+
+        for (int i = 0; i < 3; i++) {
+            string name, email, racer;
+
+            cout << "\n";
+            cout << "User " << i + 1 << "\n";
+
+            cout << "Enter Name: ";
+            getline(cin, name);
+
+            cout << "Enter Email: ";
+            getline(cin, email);
+
+            do {
+                cout << "Select your racer (Batman, Flash, Superman): ";
+                getline(cin, racer);
+
+                if (racer != batman && racer != flash && racer != superman) {
+                    cout << "The racer you have chosen is not available. Please choose your racer again!" << "\n";
+                }
+            } while (racer != batman && racer != flash && racer != superman);
+
+            userslist.push_back(Player(name, email, racer));
+        }
+    }
+    
+    string getName() const {
+        return name;
+    }
+    
+    string getEmail() const {
+        return email;
+    }
+
+    // Getter for racer
+    string getRacer() const {
+        return racer;
+    }
+
+    static void printRegisteredUsers(){
+        for (const Player& user : userslist) {
+            cout << "\n" << "Great! User " << user.name << ", you have chosen " << user.racer << " as your racer!";
+        }
+    }
+
+    
 };
 
-void Users(vector<Player>& userslist) {
-    string batman = "batman";
-    string flash = "flash";
-    string superman = "superman";
-    
-    for (int i = 0; i < 3; i++) {
-        string name, email, racer;
-        
-        cout << "\n" ;
-        cout << "User " << i+1 << "\n" ;
-        
-        cout << "Enter Name: ";
-        getline(cin, name);
-        
-        cout << "Enter Email : ";
-        getline(cin, email);
-        
-        do{
-            cout << "Select your racer (Batman, Flash, Superman): ";
-            getline(cin, racer);
-            
-        if(racer != batman && racer != flash && racer != superman ){
-            cout << "The racer u hv chosen is not available. Please ur racer again!" << "\n" ;
-            }
-        }while (racer != batman && racer != flash && racer != superman );
-        
-        
-        userslist.push_back({name, email, racer});
-    }
-}
+std::vector<Player> Player::userslist;
 
-void PrintRegisteredUser(const vector<Player>& userslist){
-    for(const Player& user : userslist){
-        cout << "Great! User " << user.name << ", you have chosen " << user.racer << " as your racer!" << "\n" ;
-    }
-}
 
 class layout {
     void plusMinus(int x) { //+---+---+ (depends on the x)
@@ -211,35 +236,20 @@ class layout {
         }
 };
 
-void checkWinner(const std::vector<Player>& userslist) //rmb to accept userlists as parameterrrrrr!!!
+void checkWinner(const vector<Player>& userslist) //rmb to accept userlists as parameterrrrrr!!!
 {
     if (flashLocation > supermanLocation && flashLocation > batmanLocation && flashEnded == true) {
         cout << endl << "Flash Won!" << endl;
         gameRunning = false;
-        for(const Player&user : userslist){
-            if(user.racer == "flash"){
-                cout << "Congrats player "<< user.name << "!" << "Your racer Flash has won the race !" << "\n" ;
-                return;
-            }
-        }
+        
     } else if (supermanLocation > flashLocation && supermanLocation > batmanLocation && supermanEnded == true) {
         cout << endl << "Superman Won!" << endl;
         gameRunning = false;
-        for(const Player&user : userslist){
-            if(user.racer == "superman"){
-                cout << "Congrats player "<< user.name << "!" << "Your racer Superman has won the race!" << "\n";
-                return;
-            }
-        }
+        
     } else if (batmanLocation > supermanLocation && batmanLocation > flashLocation && batmanEnded == true) {
         cout << endl << "Batman Won!" << endl;
         gameRunning = false;
-        for(const Player&user : userslist){
-            if (user.racer == "batman"){
-                cout << "Congrats player "<< user.name << "!" << "Your racer Batman has won the race!" << "\n";
-                return;
-            }
-        }
+        
     } else if ((batmanLocation == flashLocation == supermanLocation) && 
                 (batmanEnded == true && flashEnded == true && supermanEnded == true))
     {
@@ -253,6 +263,24 @@ void checkWinner(const std::vector<Player>& userslist) //rmb to accept userlists
     } else if (batmanLocation == flashLocation && flashEnded == true && batmanEnded == true)
     {
         cout << "Draw!";
+    }
+}
+
+void congratulateWinner(const vector<Player>& userslist) {
+    char winner = ' ';
+
+    if (flashLocation > supermanLocation && flashLocation > batmanLocation && flashEnded) {
+        winner = 'f';
+    } else if (supermanLocation > flashLocation && supermanLocation > batmanLocation && supermanEnded) {
+        winner = 's';
+    } else if (batmanLocation > supermanLocation && batmanLocation > flashLocation && batmanEnded) {
+        winner = 'b';
+    }
+
+    for (const Player& user : userslist) {
+        if (user.getRacer()[0] == winner) {
+            cout << "Congratulations, " << user.getName() << "! Your racer " << user.getRacer() << " has won the race!" << endl;
+        }
     }
 }
 
@@ -366,6 +394,7 @@ void batmanMove()
 }
 
 void GameStart(){
+        cout << "\n";
         QLayout q;
         q.StartLayout();
 }
@@ -376,10 +405,10 @@ int main()
     s.RegistrationLayout();
     cout << "Please complete the following steps to register." << "\n";
     
-    vector<Player> users;
-    Users(users);
+    Player p;
+    p.registerUsers();
     cout << "\n" ;
-    PrintRegisteredUser(users);
+    p.printRegisteredUsers();
     cout << "\n" ;
     GameStart();
     
@@ -393,7 +422,8 @@ int main()
         flashMove();
         supermanMove();
         batmanMove();
-        checkWinner(users);
+        checkWinner(Player::userslist); // pass userlists vector from Player class
+        congratulateWinner(Player::userslist);
         l.printLayout();
     }
     cout << endl;
