@@ -8,6 +8,7 @@
 #include <ctime>
 
 using namespace std;
+using namespace std::chrono;
 
 
 //configuration
@@ -139,16 +140,16 @@ class layout {
 };
 
 
+// Bonus Item
 struct Bonus {
     int bonusNum = 0;
-    int box = 10;
     vector<int> bonusX;
     vector<int> bonusY;
     vector<int> bonusFunc;
     vector<int> bonusLocation;
 
     void initializeBonusPositions() {
-        for (int i = 0; i < box; i++) {
+        for (int i = 0; i < bonusNum; i++) {
             int x = getRandomNumber(0, width - 1);
             int y = getRandomNumber(1, height - 2);
             bonusX.push_back(x);
@@ -163,10 +164,10 @@ struct Bonus {
     }
 
     int getRandomBonusFunction() {
-        return rand() % 3;
+        return rand() % 3 + 1;
     }
 
-    void calculateXY(int bonusX, int bonusY, int &racerLocation, int &racerX, int &racerY) {
+    void calculateXY(int &bonusX, int &bonusY, int racerLocation, int &racerX, int &racerY) {
         int coordinate = 0;
         while (coordinate < (box + 10)) {
             if (coordinate == racerLocation) {
@@ -188,92 +189,43 @@ struct Bonus {
         }
     }
 
-    void generateBonusItem(int bonusX, int bonusY, int &nextLocation, int &racerLocation, int &racerX, int &racerY) {
-        int bonusRandom = rand() % 3;
-
-        if (bonusRandom == 0) 
-        { //Bonus 1
-            nextLocation = racerLocation + 3;
-            calculateXY(bonusX, bonusY, racerLocation, racerX, racerY);
-            cout << "Move forward by 3 steps" << endl;
-        } else if (bonusRandom == 1) 
-        { //Bonus 2
-            nextLocation = racerLocation * 2;
-            calculateXY(bonusX, bonusY, racerLocation, racerX, racerY);
-            cout << "Double your steps" << endl;
-        } else 
-        {   //Bonus 3
-            nextLocation = racerLocation + step; 
-            calculateXY(bonusX, bonusY, racerLocation, racerX, racerY);
-            cout << "Get an extra turn" << endl;
-        }
-    }
-
-
-
-    void bonusXY(vector<int> myXbonus) {
-        int xCoordinate = 2;
-        int yCoordinate = height - 1;
-        int coordinate = 0;
-        int i = 0;
-        while (coordinate < box) {
-            if (i < myXbonus.size() && myXbonus[i] == coordinate) {
-                bonusX.push_back(xCoordinate);
-                bonusY.push_back(yCoordinate);
-                i++;
-            }
-
-            if ((coordinate >= 0 && coordinate < 10) || coordinate >= (0 + box)) {
-                xCoordinate += 4;
-            } else if (coordinate >= 10 && coordinate < 20) {
-                yCoordinate += 1;
-            } else if (coordinate >= 20 && coordinate < 30) {
-                xCoordinate -= 4;
-            } else if (coordinate < 0 || (coordinate < (0 + box) && coordinate >= box)) {
-                yCoordinate -= 1;
-            }
-            coordinate++;
-        }
-    }
-
-    void moveForth(int &racerLocation, int &racerX, int racerY){
+    void moveForth(int xInitial, int height, int &racerLocation, int &racerX, int &racerY) {
         racerLocation += 3;
+        calculateXY(xInitial, height, racerLocation, racerX, racerY);
     }
 
-    void doubleSteps(int &racerLocation, int &racerX, int racerY){
+    void doubleSteps(int xInitial, int height, int &racerLocation, int &racerX, int &racerY) {
         racerLocation *= 2;
+        calculateXY(xInitial, height, racerLocation, racerX, racerY);
     }
 
-    void extraTurn (int &racerLocation, int &racerX, int racerY){
+    void extraTurn(int step, int xInitial, int height, int &racerLocation, int &racerX, int &racerY) {
         racerLocation += step;
+        calculateXY(xInitial, height, racerLocation, racerX, racerY);
     }
 
-   void bonusItem_option(int &racerLocation, int &racerX, int &racerY, string racername) {
-    cout << "Enter input to use your bonus item (y = Use Bonus, x = Keep Bonus): ";
-    char choice;
-    cin >> choice;
-    if (choice == 'y' || choice == 'Y') { // Logic to use the bonus immediately
-        if (bonusFunc.back() == '1') {
-            moveForth(xInitial, height-1, racerLocation, racerX, racerY);
-            cout << racername << " BONUS ITEM OBTAINED ! " << racername << " move forward 3 steps" << endl << endl;
+    void bonusItem_option(int &racerLocation, int &racerX, int &racerY, string racername, vector<int> &bonusFunc, int xInitial, int height, int step) {
+        cout << "Enter input to use your bonus item (y = Use Bonus, x = Keep Bonus): ";
+        char choice;
+        cin >> choice;
+        if (choice == 'y' || choice == 'Y') { // Logic to use the bonus immediately
+            int bonusType = bonusFunc.back();
+            if (bonusType == 1) {
+                moveForth(xInitial, height - 1, racerLocation, racerX, racerY);
+                cout << racername << " BONUS ITEM OBTAINED! " << racername << " move forward 3 steps" << endl << endl;
+            } else if (bonusType == 2) {
+                doubleSteps(xInitial, height - 1, racerLocation, racerX, racerY);
+                cout << racername << " BONUS ITEM OBTAINED! " << racername << ", your steps have been doubled" << endl << endl;
+            } else if (bonusType == 3) {
+                extraTurn(step, xInitial, height - 1, racerLocation, racerX, racerY);
+                cout << racername << " BONUS ITEM OBTAINED! " << racername << " you got an extra turn" << endl << endl;
+            }
             bonusFunc.pop_back(); // Remove the used bonus item
-
-        } else if (bonusFunc.back() == '2') {
-            doubleSteps(xInitial, height-1, racerLocation, racerX, racerY);
-            cout << racername << " BONUS ITEM OBTAINED !" << racername << ", your steps has been doubled" << endl << endl;
-            bonusFunc.pop_back(); // Remove the used bonus item
-
-        } else if (bonusFunc.back() == '3') {
-            extraTurn(step, xInitial, height-1, racerLocation, racerX, racerY);
-            cout << racername << " BONUS ITEM OBTAINED !"  << racername << " you got an extra turn" << endl << endl;
-
+        } else if (choice == 'x' || choice == 'X') {
+            // Logic to store the bonus for later use
+            cout << "Bonus item stored for later use." << endl;
         }
-        bonusFunc.pop_back(); // Remove the used bonus item
-    } else if (choice == 'x' || choice == 'X') {
-        // Logic to store the bonus for later use
-        cout << "Bonus item stored for later use." << endl;
     }
-}
 
     void bonusItem_inquiry() {
         cout << "State the number of Bonus items you desire (2-6): ";
@@ -299,13 +251,15 @@ struct Bonus {
                     cout << "Bonus Item " << counter << ": Location: (" << bonusX[i] << ", " << bonusY[i] << ") (Steps got doubled)" << endl;
                     break;
                 case 3:
-                    cout << "Bonus Item " << counter << ": Location: (" << bonusX[i] << ", " << bonusY[i] << ") (Extra Turn)" << endl;
+                    cout << "Bonus Item " << counter << ": Location: (" << bonusX[i] << ", " << bonusY[i] << ") (Extra turn)" << endl;
                     break;
             }
             counter++;
         }
+        cout << endl;
     }
 };
+
 
 void checkWinner()
 {
@@ -447,8 +401,12 @@ int main()
 {
     string confirmation;
     layout l;
+    Bonus bonus;
     box_inquiry();
     lap_inquiry();
+    bonus.bonusItem_inquiry();
+    bonus.initializeBonusPositions();
+    bonus.displayBonusInfo();
     l.printLayout();
     while (gameRunning) {
         this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
