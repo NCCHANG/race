@@ -127,7 +127,9 @@ class Obstacle {
         for (int i=0; i < obstacleNum; i++) { 
             cin >> abcFunc;
             tolower(abcFunc);
-            if (abcFunc != 'a' || abcFunc != 'b' || abcFunc != 'c') {
+            if (abcFunc == 'a' || abcFunc == 'b' || abcFunc == 'c') {
+            }
+            else {
                 cout << "Please Enter A Correct Alphabet For This Obstacle! (a/b/c): ";
                 cin >> abcFunc;
             }
@@ -144,11 +146,11 @@ class Obstacle {
             obstacle_inquiry();
         }
         else {
-            cout <<"Enter Obstacle location (1- " << box-1 << "): ";
+            cout <<"Enter Obstacle location In Ascending Order (1- " << box-1 << "): ";
         for (int i=0; i < obstacleNum; i++) { 
             cin >> temp;
             if (temp > box || temp <= 0) {
-                cout << "Please Enter A Obstacle location ! (1- " << box-1 << "): ";
+                cout << "Please Enter A Obstacle location In Ascending Order! (1- " << box-1 << "): ";
                 cin >> temp;
             }
             obstacleLocation.push_back(temp);
