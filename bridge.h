@@ -55,7 +55,7 @@ public:
         int racerY, int coordinateY)
     {
         int coordinate = 0;
-        while (coordinate < (box + 10)) {
+        while (coordinate < box) {
 
             if (racerX == coordinateX && racerY == coordinateY) {
                 break;
