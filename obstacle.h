@@ -80,6 +80,9 @@ class Obstacle {
                         missTurn(step, xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
                         cout << racername << " HIT OBSTACLE! " << racername << " miss his current turn" << endl << endl;
                         break;
+
+                        default:
+                        break;
                     }
                 }
             }
@@ -123,6 +126,13 @@ class Obstacle {
         cout << "Enter function for this obstacle (a = step back 3 step, b = back to start point, c = miss one trun): ";
         for (int i=0; i < obstacleNum; i++) { 
             cin >> abcFunc;
+            tolower(abcFunc);
+            if (abcFunc == 'a' || abcFunc == 'b' || abcFunc == 'c') {
+            }
+            else {
+                cout << "Please Enter A Correct Alphabet For This Obstacle! (a/b/c): ";
+                cin >> abcFunc;
+            }
             obstacleFunc.push_back(abcFunc);
         }
     }
@@ -136,9 +146,13 @@ class Obstacle {
             obstacle_inquiry();
         }
         else {
-            cout <<"Enter Obstacle location (1- " << box-1 << "): ";
+            cout <<"Enter Obstacle location In Ascending Order (1- " << box-1 << "): ";
         for (int i=0; i < obstacleNum; i++) { 
             cin >> temp;
+            if (temp > box || temp <= 0) {
+                cout << "Please Enter A Obstacle location In Ascending Order! (1- " << box-1 << "): ";
+                cin >> temp;
+            }
             obstacleLocation.push_back(temp);
         }
         obstacleFunc_inquiry();
@@ -164,6 +178,10 @@ class Obstacle {
                 case 'C':
                 case 'c':
                 cout << "Obstacle " << counter << ":" << setw(2) << "  Location: " << obstacleLocation[i] << setw(3) << "  Function: Miss One Turn" << endl;
+                break;
+
+                default:
+                cout << "Obstacle " << counter << ":" << setw(2) << "  Location: " << obstacleLocation[i] << setw(3) << "  Function: No Function since enter wrong value" << endl;
                 break;
             }
             counter++;
