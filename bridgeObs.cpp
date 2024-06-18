@@ -47,7 +47,6 @@ int supermanLocation = 0;
 int batmanLocation = 0;
 
 #include "obstacle.h"
-Bridge bridge(width, height, box, topLeftCoordinate, topRightCoordinate, botRightCoordinate);
 
 class layout {
 
@@ -309,6 +308,7 @@ int main()
     string confirmation;
     layout l;
     box_inquiry();
+    Bridge bridge(width, height, box, topLeftCoordinate, topRightCoordinate, botRightCoordinate);
     l.printLayout();
     lap_inquiry();
     bridge.bridgeYValues = bridge.bridge_inquiry();
