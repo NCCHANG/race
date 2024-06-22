@@ -27,18 +27,21 @@ int flashXPosition = 1;
 int flashYPosition = height - 1;
 int flashLapLeft = 2;
 bool flashEnded = false;
+int flashStep = 0;
 
 char superman = 's';
 int supermanXPosition = 3;
 int supermanYPosition = height - 1;
 int supermanLapLeft = 2;
 bool supermanEnded = false;
+int supermanStep = 0;
 
 char batman = 'b'; //3-6
 int batmanXPosition = 2;
 int batmanYPosition = height - 1;
 int batmanLapLeft = 2;
 bool batmanEnded = false;
+int batmanStep = 0;
 
 //for counting
 int step;
@@ -183,15 +186,19 @@ void checkWinner()
                 (batmanEnded == true && flashEnded == true && supermanEnded == true))
     {
         cout << endl << "Draw!" << endl;
+        gameRunning = false;
     } else if (supermanLocation == flashLocation && flashEnded == true && supermanEnded == true)
     {
         cout << endl << "Draw!" << endl;
+        gameRunning = false;
     } else if (supermanLocation == batmanLocation && batmanEnded == true && supermanEnded == true)
     {
         cout << endl << "Draw!" << endl;
+        gameRunning = false;
     } else if (batmanLocation == flashLocation && flashEnded == true && batmanEnded == true)
     {
         cout << endl << "Draw!" << endl;
+        gameRunning = false;
     }
 }
 
@@ -280,7 +287,7 @@ void flashMove()
     step = 2 + (rand() % 5); // 2 - 6
     flashLocation += step;
     cout << "Flash move " << step << " steps." << endl;
-    cout << "Flash lap remaining: " << flashLapLeft << endl;
+    cout << "Flash lap remaining: " << flashLapLeft << endl << endl;
     
     logic(1,flashLocation,flashXPosition,flashYPosition,flashLapLeft,flashEnded);
 }
@@ -291,20 +298,31 @@ void supermanMove()
     step = 3 + (rand() % 3); //3 - 5
     supermanLocation += step;
     cout << "Superman move " << step << " steps." << endl;
-    cout << "Superman lap remaining: " << supermanLapLeft << endl;
+    cout << "Superman lap remaining: " << supermanLapLeft << endl << endl;
     
     logic(3,supermanLocation,supermanXPosition,supermanYPosition,supermanLapLeft,supermanEnded);
 }
 
-void  batmanMove()
+void batmanMove()
 {
     srand(time(0));
     step = 3 + (rand() % 4); //3 - 6
     batmanLocation += step;
     cout << endl << "Batman move " << step << " steps." << endl;
-    cout << "Batman lap remaining: " << batmanLapLeft << endl;
+    cout << "Batman lap remaining: " << batmanLapLeft << endl << endl;
     
     logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft,batmanEnded);
+}
+
+void checkObstacleAfterBridge() {
+    supermanXPosition -= 1;
+    flashXPosition += 1;
+    obstacle.checkObstacle(batmanStep, 2, batmanXPosition,
+                            batmanYPosition, batmanLocation, "Batman");
+    obstacle.checkObstacle(supermanStep, 3, supermanXPosition, 
+                            supermanYPosition, supermanLocation, "Superman");
+    obstacle.checkObstacle(flashStep, 1, flashXPosition, 
+                            flashYPosition, flashLocation, "Flash");
 }
 
 int main()
@@ -325,20 +343,22 @@ int main()
         // this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
         cin.get();
         batmanMove();
-        obstacle.checkObstacle(step, 2, batmanXPosition, batmanYPosition, batmanLocation, "Batman");
+        batmanStep = step;
         supermanMove();
-        supermanXPosition -= 1;
-        obstacle.checkObstacle(step, 3, supermanXPosition, supermanYPosition, supermanLocation, "Superman");
+        supermanStep = step;
         flashMove();
-        flashXPosition += 1;
-        obstacle.checkObstacle(step, 1, flashXPosition, flashYPosition, flashLocation, "Flash");
-        
+        flashStep = step;
+
+        checkObstacleAfterBridge();
+
         bridge.checkIfAtBridgeNMove(1, flashXPosition,
             flashYPosition, flashLocation);
         bridge.checkIfAtBridgeNMove(3, supermanXPosition,
             supermanYPosition, supermanLocation);
         bridge.checkIfAtBridgeNMove(2, batmanXPosition,
             batmanYPosition, batmanLocation);
+
+        checkObstacleAfterBridge();
 
         l.printLayout({},bridge.bridgeYValues);
         checkWinner();
