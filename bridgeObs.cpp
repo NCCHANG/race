@@ -207,6 +207,7 @@ void logic(int coordinateX, int &racerlocation, int &racerX, int &racerY,
         roundLeft -= 1;
     } else if (racerlocation >= box && roundLeft == 1) {
         playerEnd = true;
+        roundLeft -= 1;
     }
     //getting x and y for the coordination
     while (coordinate < (box + 10)) {
@@ -265,7 +266,7 @@ void box_inquiry() {
 void lap_inquiry() {
     int num_of_lap;
     do {
-        cout << "Number of Lap: ";
+        cout << endl << "Number of Lap: ";
         cin >> num_of_lap;
     } while (num_of_lap < 1);
     flashLapLeft = num_of_lap;
@@ -279,6 +280,7 @@ void flashMove()
     step = 2 + (rand() % 5); // 2 - 6
     flashLocation += step;
     cout << "Flash move " << step << " steps." << endl;
+    cout << "Flash lap remaining: " << flashLapLeft << endl;
     
     logic(1,flashLocation,flashXPosition,flashYPosition,flashLapLeft,flashEnded);
 }
@@ -289,6 +291,7 @@ void supermanMove()
     step = 3 + (rand() % 3); //3 - 5
     supermanLocation += step;
     cout << "Superman move " << step << " steps." << endl;
+    cout << "Superman lap remaining: " << supermanLapLeft << endl;
     
     logic(3,supermanLocation,supermanXPosition,supermanYPosition,supermanLapLeft,supermanEnded);
 }
@@ -299,6 +302,7 @@ void  batmanMove()
     step = 3 + (rand() % 4); //3 - 6
     batmanLocation += step;
     cout << endl << "Batman move " << step << " steps." << endl;
+    cout << "Batman lap remaining: " << batmanLapLeft << endl;
     
     logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft,batmanEnded);
 }

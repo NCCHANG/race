@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BRIDGE
+#define BRIDGE
 
 #include <iostream>
 #include <vector>
@@ -104,3 +105,4 @@ public:
     }
 
 };
+#endif

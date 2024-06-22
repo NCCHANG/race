@@ -313,13 +313,13 @@ int main()
         flashMove();
         supermanMove();
         batmanMove();
+        checkWinner();
         bridge.checkIfAtBridgeNMove(1, flashXPosition,
             flashYPosition, flashLocation);
         bridge.checkIfAtBridgeNMove(3, supermanXPosition,
             supermanYPosition, supermanLocation);
         bridge.checkIfAtBridgeNMove(2, batmanXPosition,
             batmanYPosition, batmanLocation);
-        checkWinner();
         l.printLayout(bridge.bridgeYValues);
     }
     cout << endl;
