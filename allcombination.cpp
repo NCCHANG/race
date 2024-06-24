@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "Player.h"
 #include "bridge.h"
+#include "obstacle.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -52,7 +53,6 @@ int flashLocation = 0;
 int supermanLocation = 0;
 int batmanLocation = 0;
 
-#include "obstacle.h"
 class Bonus {
 
     public:
@@ -263,7 +263,7 @@ class layout {
         }
     }
 
-    void straightLineBorder (int x, int y, vector<int> myXobstacle, vector<int> myXbonus) { //|   |   |   |   |   |   |   | (depends on the x)
+    void straightLineBorder (int x, int y, vector<int> myXobstacle, vector<int> myXbonus, Obstacle obstacle) { //|   |   |   |   |   |   |   | (depends on the x)
         bool printBonus = false;
         auto brx = find(bonus.bonusXLocation.begin(), bonus.bonusXLocation.end(), x);
         auto bry = find(bonus.bonusYLocation.begin(), bonus.bonusYLocation.end(), y);
@@ -305,7 +305,7 @@ class layout {
     }
 
     void straightLineNotBorder (int x, int y,vector<int> bridgeHeights, 
-                    vector<int> myXobstacle, vector<int> myXbonus) { //|   |                |   | (depends on x)
+                    vector<int> myXobstacle, vector<int> myXbonus, Obstacle obstacle) { //|   |                |   | (depends on x)
        bool printBonus = false;
         vector<int>::iterator brx = find(bonus.bonusXLocation.begin(), bonus.bonusXLocation.end(), x);
         vector<int>::iterator bry = find(bonus.bonusYLocation.begin(), bonus.bonusYLocation.end(), y);
@@ -351,7 +351,7 @@ class layout {
     
     public:
 
-    void printLayout(vector<int> myXObstacle = {}, vector<int> myXbonus= {},
+    void printLayout(Obstacle obstacle,vector<int> myXObstacle = {}, vector<int> myXbonus= {},
                 vector<int> bridgeHeights = {}) {
         for (int x = 0; x < width; x++) // +---+---+---
         {
@@ -366,10 +366,10 @@ class layout {
             for (int x = 0; x < width; x++) //|   |   |   |   | 
             {
                 if (y == 0 || y == height-1) {
-                    straightLineBorder(x, y, myXObstacle, myXbonus);
+                    straightLineBorder(x, y, myXObstacle, myXbonus,obstacle);
                 }
                 else {
-                    straightLineNotBorder(x, y, bridgeHeights ,myXObstacle, myXbonus);
+                    straightLineNotBorder(x, y, bridgeHeights ,myXObstacle, myXbonus,obstacle);
                 }
             }
 
@@ -555,7 +555,7 @@ void batmanMove()
     logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft,batmanEnded);
 }
 
-void checkObstacleAfterBridge() {
+void checkObstacleAfterBridge(Obstacle obstacle) {
     supermanXPosition -= 1;
     flashXPosition += 1;
     obstacle.checkObstacle(batmanStep, 2, batmanXPosition,
@@ -589,7 +589,8 @@ int main()
     layout l;
     box_inquiry();
     Bridge bridge(width, height, box, topLeftCoordinate, topRightCoordinate, botRightCoordinate);
-    l.printLayout();
+    Obstacle obstacle(width, height, box, topLeftCoordinate, topRightCoordinate, botRightCoordinate);
+    l.printLayout(obstacle);
     lap_inquiry();
     bridge.bridgeYValues = bridge.bridge_inquiry();
     obstacle.obstacleLocation = obstacle.obstacle_inquiry();
@@ -598,7 +599,7 @@ int main()
     bonus.bonusLocation = bonus.bonus_inquiry();
     bonus.bonusXYPosition(bonus.bonusLocation);
     bonus.printBonusInfo();
-    l.printLayout(obstacle.obstacleLocation,bonus.bonusLocation,bridge.bridgeYValues);
+    l.printLayout(obstacle,obstacle.obstacleLocation,bonus.bonusLocation,bridge.bridgeYValues);
     cout << endl;
     while (gameRunning) {
         // this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
@@ -610,7 +611,7 @@ int main()
         flashMove();
         flashStep = step;
 
-        checkObstacleAfterBridge();
+        checkObstacleAfterBridge(obstacle);
 
         bridge.checkIfAtBridgeNMove(1, flashXPosition,
             flashYPosition, flashLocation);
@@ -619,9 +620,9 @@ int main()
         bridge.checkIfAtBridgeNMove(2, batmanXPosition,
             batmanYPosition, batmanLocation);
 
-        checkObstacleAfterBridge();
+        checkObstacleAfterBridge(obstacle);
 
-        l.printLayout({},bridge.bridgeYValues);
+        l.printLayout(obstacle,{},{},bridge.bridgeYValues);
         checkWinner();
         congratulateWinner(Player::userslist);
         cout << endl;

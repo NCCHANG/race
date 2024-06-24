@@ -1,6 +1,16 @@
 class Obstacle {
-
-    public:
+int width, height, box, topLeftCoordinate,
+        topRightCoordinate, botRightCoordinate;
+public:
+    Obstacle(int w, int h, int b, int tl, int tr, int br )
+    {
+        width = w;
+        height = h;
+        box = b;
+        topLeftCoordinate = tl;
+        topRightCoordinate = tr;
+        botRightCoordinate = br;
+    }
 
     int obstacleNum, temp = 0;
     char abcFunc;
@@ -201,4 +211,4 @@ class Obstacle {
         }
     }
 
-} obstacle ; 
+}; 
