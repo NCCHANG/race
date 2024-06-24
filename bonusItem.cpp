@@ -124,7 +124,7 @@ class Bonus {
                                 break;
                             case 'L':
                                 extraTurn(step, xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
-                                cout << racer vvname << " used bonus item & got an extra turn." << endl << endl;
+                                cout << racername << " used bonus item & got an extra turn." << endl << endl;
                                 break;
                             default:
                                 break;
