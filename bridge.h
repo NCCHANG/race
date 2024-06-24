@@ -35,9 +35,9 @@ public:
 
         for (int i = 0; i < n; i++)
         {
-            do {
                 cout << "Enter y from [1 to " << height - 2 //exclude top and bot
                     << "]: ";
+            do {
                 cin >> yinput;
             } while (yinput < 1 || yinput > height - 2);
 
