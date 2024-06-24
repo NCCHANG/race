@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include "bridge.h"
+#include "obstacle.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -49,7 +50,6 @@ int flashLocation = 0;
 int supermanLocation = 0;
 int batmanLocation = 0;
 
-#include "obstacle.h"
 
 class layout {
 
@@ -69,7 +69,7 @@ class layout {
         }
     }
 
-    void straightLineBorder (int x, int y, vector<int> myXobstacle) { //|   |   |   |   |   |   |   | (depends on the x)
+    void straightLineBorder (int x, int y, vector<int> myXobstacle, Obstacle obstacle) { //|   |   |   |   |   |   |   | (depends on the x)
         bool printO = false;
         auto rx = find(obstacle.obstacleXLocation.begin(), obstacle.obstacleXLocation.end(), x);
         auto ry = find(obstacle.obstacleYLocation.begin(), obstacle.obstacleYLocation.end(), y);
@@ -96,7 +96,7 @@ class layout {
             }
     }
 
-    void straightLineNotBorder (int x, int y,vector<int> bridgeHeights, vector<int> myXobstacle) { //|   |                |   | (depends on x)
+    void straightLineNotBorder (int x, int y,vector<int> bridgeHeights, vector<int> myXobstacle, Obstacle obstacle) { //|   |                |   | (depends on x)
         bool printO = false;
         vector<int>::iterator rx = find(obstacle.obstacleXLocation.begin(), obstacle.obstacleXLocation.end(), x);
         vector<int>::iterator ry = find(obstacle.obstacleYLocation.begin(), obstacle.obstacleYLocation.end(), y);
@@ -128,7 +128,7 @@ class layout {
     
     public:
 
-    void printLayout(vector<int> myXObstacle = {},
+    void printLayout(Obstacle obstacle,vector<int> myXObstacle = {},
                 vector<int> bridgeHeights = {}) {
         for (int x = 0; x < width; x++) // +---+---+---
         {
@@ -143,10 +143,10 @@ class layout {
             for (int x = 0; x < width; x++) //|   |   |   |   | 
             {
                 if (y == 0 || y == height-1) {
-                    straightLineBorder(x, y, myXObstacle);
+                    straightLineBorder(x, y, myXObstacle,obstacle);
                 }
                 else {
-                    straightLineNotBorder(x, y, bridgeHeights ,myXObstacle);
+                    straightLineNotBorder(x, y, bridgeHeights ,myXObstacle,obstacle);
                 }
             }
 
@@ -314,7 +314,7 @@ void batmanMove()
     logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft,batmanEnded);
 }
 
-void checkObstacleAfterBridge() {
+void checkObstacleAfterBridge(Obstacle obstacle) {
     supermanXPosition -= 1;
     flashXPosition += 1;
     obstacle.checkObstacle(batmanStep, 2, batmanXPosition,
@@ -331,13 +331,14 @@ int main()
     layout l;
     box_inquiry();
     Bridge bridge(width, height, box, topLeftCoordinate, topRightCoordinate, botRightCoordinate);
-    l.printLayout();
+    Obstacle obstacle(width, height, box, topLeftCoordinate, topRightCoordinate, botRightCoordinate);
+    l.printLayout(obstacle);
     lap_inquiry();
     bridge.bridgeYValues = bridge.bridge_inquiry();
     obstacle.obstacleLocation = obstacle.obstacle_inquiry();
     obstacle.obstacleXYPosition(obstacle.obstacleLocation);
     obstacle.printObstacleInfo();
-    l.printLayout(obstacle.obstacleLocation,bridge.bridgeYValues);
+    l.printLayout(obstacle,obstacle.obstacleLocation,bridge.bridgeYValues);
     cout << endl;
     while (gameRunning) {
         // this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
@@ -349,7 +350,7 @@ int main()
         flashMove();
         flashStep = step;
 
-        checkObstacleAfterBridge();
+        checkObstacleAfterBridge(obstacle);
 
         bridge.checkIfAtBridgeNMove(1, flashXPosition,
             flashYPosition, flashLocation);
@@ -358,9 +359,9 @@ int main()
         bridge.checkIfAtBridgeNMove(2, batmanXPosition,
             batmanYPosition, batmanLocation);
 
-        checkObstacleAfterBridge();
+        checkObstacleAfterBridge(obstacle);
 
-        l.printLayout({},bridge.bridgeYValues);
+        l.printLayout(obstacle,{},bridge.bridgeYValues);
         checkWinner();
         cout << endl;
     }
