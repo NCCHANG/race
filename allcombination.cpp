@@ -566,6 +566,17 @@ void checkObstacleAfterBridge(Obstacle obstacle) {
                             flashYPosition, flashLocation, "Flash");
 }
 
+void checkBonusAfterBridge(Bonus bonus) {
+    supermanXPosition -= 1;
+    flashXPosition += 1;
+    bonus.checkBonus(batmanStep, 2, batmanXPosition, 
+                        batmanYPosition, batmanLocation, "Batman");
+    bonus.checkBonus(supermanStep, 3, supermanXPosition, 
+                        supermanYPosition, supermanLocation, "Superman");
+    bonus.checkBonus(flashStep, 1, flashXPosition, 
+                        flashYPosition, flashLocation, "Flash");
+}
+
 void GameStart(){
         cout << "\n";
         QLayout q;
@@ -613,6 +624,8 @@ int main()
 
         checkObstacleAfterBridge(obstacle);
 
+        checkBonusAfterBridge(bonus);
+
         bridge.checkIfAtBridgeNMove(1, flashXPosition,
             flashYPosition, flashLocation);
         bridge.checkIfAtBridgeNMove(3, supermanXPosition,
@@ -621,6 +634,8 @@ int main()
             batmanYPosition, batmanLocation);
 
         checkObstacleAfterBridge(obstacle);
+
+        checkBonusAfterBridge(bonus);
 
         l.printLayout(obstacle,{},{},bridge.bridgeYValues);
         checkWinner();

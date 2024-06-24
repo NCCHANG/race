@@ -148,7 +148,7 @@ public:
     }
 
     void obstacleFunc_inquiry() {  // Ask for function of obstacle
-        cout << "Enter function for this obstacle (a = step back 3 step, b = back to start point, c = miss one trun): ";
+        cout << "Enter function for this obstacle In ONE LINE WITH SPACE(a = step back 3 step, b = back to start point, c = miss one trun): ";
         for (int i=0; i < obstacleNum; i++) { 
             cin >> abcFunc;
             tolower(abcFunc);
@@ -165,7 +165,7 @@ public:
             obstacle_inquiry();
         }
         else {
-            cout <<"Enter Obstacle location In Ascending Order (1- " << box-1 << "): ";
+            cout <<"Enter Obstacle location In Ascending Order In ONE LINE WITH SPACE(1- " << box-1 << "): ";
         for (int i=0; i < obstacleNum; i++) { 
             cin >> temp;
             obstacleLocation.push_back(temp);
