@@ -191,27 +191,42 @@ class Bonus {
             bonusFunc.push_back(JKLFunc);
         }
     }
+    bool ObstacleConflictFunc(const int temp,const Obstacle obstacle) {
+        for(int Obsi = 0; Obsi < obstacle.obstacleLocation.size();Obsi++)
+            {
+                if (temp == obstacle.obstacleLocation[Obsi]) {
+                    return true;
+                }
+            }
+            return false;
+    }
 
-    vector<int>  bonus_inquiry() {
-    
+    vector<int>  bonus_inquiry(Obstacle obstacle) {
+        bool obstacleConflict;
         cout << "Enter the desired total of Bonus Item for this game (2 to 6): ";
         cin >> bonusNum;
         if (bonusNum < 2 || bonusNum > 6){
             cout << "Please enter a Bonus Item amount that is within the range !" << endl;
-            bonus_inquiry();
+            bonus_inquiry(obstacle);
         }
-        else {
-            cout <<"Enter Bonus Item location In Ascending Order (1 to " << box-1 << "): " << endl;
+        cout <<"Enter Bonus Item location In Ascending Order (1 to " << box-1 << "): " << endl;
         for (int i=0; i < bonusNum; i++) { 
             cin >> temp;
             if (temp > box || temp <= 0) {
                 cout << "Please Enter Bonus Item location In Ascending Order! (1 to " << box-1 << "): " << endl;
                 cin >> temp;
             }
+
+            obstacleConflict = ObstacleConflictFunc(temp,obstacle);
+            if (obstacleConflict) {
+                cout << "Obstacle is already using the location " << temp <<'.' << endl;
+                i--;
+                continue;
+            }
+
             bonusLocation.push_back(temp);
         }
         bonusFunc_inquiry();
-        }
         return bonusLocation;
     }
 
@@ -607,7 +622,7 @@ int main()
     obstacle.obstacleLocation = obstacle.obstacle_inquiry();
     obstacle.obstacleXYPosition(obstacle.obstacleLocation);
     obstacle.printObstacleInfo();
-    bonus.bonusLocation = bonus.bonus_inquiry();
+    bonus.bonusLocation = bonus.bonus_inquiry(obstacle);
     bonus.bonusXYPosition(bonus.bonusLocation);
     bonus.printBonusInfo();
     l.printLayout(obstacle,obstacle.obstacleLocation,bonus.bonusLocation,bridge.bridgeYValues);
