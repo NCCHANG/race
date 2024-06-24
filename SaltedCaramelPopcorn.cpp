@@ -52,7 +52,7 @@ int flashLocation = 0;
 int supermanLocation = 0;
 int batmanLocation = 0;
 
-#include "obstacles.h"
+#include "obstacle.h"
 
 class layout {
 
