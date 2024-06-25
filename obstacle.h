@@ -204,7 +204,7 @@ public:
                 default:
                 cout << "Obstacle " << counter << ":" << setw(2) << "  Location: " 
                      << obstacleLocation[i] << setw(3) 
-                     << "  Function: No Function since enter wrong value" << endl;
+                     << "  Function: No Function since enter wrong value" << endl << endl;
                 break;
             }
             counter++;

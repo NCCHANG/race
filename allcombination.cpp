@@ -72,7 +72,7 @@ class layout {
         }
     }
 
-    void straightLineBorder (int x, int y, vector<int> myXobstacle, vector<int> myXbonus, Obstacle obstacle) { //|   |   |   |   |   |   |   | (depends on the x)
+    void straightLineBorder (int x, int y, vector<int> myXobstacle, vector<int> myXbonus, Obstacle obstacle, Bonus bonus) { //|   |   |   |   |   |   |   | (depends on the x)
         bool printBonus = false;
         auto brx = find(bonus.bonusXLocation.begin(), bonus.bonusXLocation.end(), x);
         auto bry = find(bonus.bonusYLocation.begin(), bonus.bonusYLocation.end(), y);
@@ -114,7 +114,7 @@ class layout {
     }
 
     void straightLineNotBorder (int x, int y,vector<int> bridgeHeights, 
-                    vector<int> myXobstacle, vector<int> myXbonus, Obstacle obstacle) { //|   |                |   | (depends on x)
+                    vector<int> myXobstacle, vector<int> myXbonus, Obstacle obstacle, Bonus bonus) { //|   |                |   | (depends on x)
        bool printBonus = false;
         vector<int>::iterator brx = find(bonus.bonusXLocation.begin(), bonus.bonusXLocation.end(), x);
         vector<int>::iterator bry = find(bonus.bonusYLocation.begin(), bonus.bonusYLocation.end(), y);
@@ -160,7 +160,7 @@ class layout {
     
     public:
 
-    void printLayout(Obstacle obstacle,vector<int> myXObstacle = {}, vector<int> myXbonus= {},
+    void printLayout(Obstacle obstacle, Bonus bonus, vector<int> myXObstacle = {}, vector<int> myXbonus= {},
                 vector<int> bridgeHeights = {}) {
         for (int x = 0; x < width; x++) // +---+---+---
         {
@@ -175,10 +175,10 @@ class layout {
             for (int x = 0; x < width; x++) //|   |   |   |   | 
             {
                 if (y == 0 || y == height-1) {
-                    straightLineBorder(x, y, myXObstacle, myXbonus,obstacle);
+                    straightLineBorder(x, y, myXObstacle, myXbonus,obstacle, bonus);
                 }
                 else {
-                    straightLineNotBorder(x, y, bridgeHeights ,myXObstacle, myXbonus,obstacle);
+                    straightLineNotBorder(x, y, bridgeHeights ,myXObstacle, myXbonus,obstacle, bonus);
                 }
             }
 
@@ -410,7 +410,8 @@ int main()
     box_inquiry();
     Bridge bridge(width, height, box, topLeftCoordinate, topRightCoordinate, botRightCoordinate);
     Obstacle obstacle(width, height, box, topLeftCoordinate, topRightCoordinate, botRightCoordinate);
-    l.printLayout(obstacle);
+    Bonus bonus(width, height, box, topLeftCoordinate, topRightCoordinate, botRightCoordinate);
+    l.printLayout(obstacle, bonus);
     lap_inquiry();
     bridge.bridgeYValues = bridge.bridge_inquiry();
     obstacle.obstacleLocation = obstacle.obstacle_inquiry();
@@ -419,7 +420,7 @@ int main()
     bonus.bonusLocation = bonus.bonus_inquiry();
     bonus.bonusXYPosition(bonus.bonusLocation);
     bonus.printBonusInfo();
-    l.printLayout(obstacle,obstacle.obstacleLocation,bonus.bonusLocation,bridge.bridgeYValues);
+    l.printLayout(obstacle, bonus, obstacle.obstacleLocation, bonus.bonusLocation, bridge.bridgeYValues);
     cout << endl;
     while (gameRunning) {
         // this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
@@ -446,7 +447,7 @@ int main()
 
         checkBonusAfterBridge(bonus);
 
-        l.printLayout(obstacle,{},{},bridge.bridgeYValues);
+        l.printLayout(obstacle, bonus, {}, {}, bridge.bridgeYValues);
         checkWinner();
         congratulateWinner(Player::userslist);
         cout << endl;

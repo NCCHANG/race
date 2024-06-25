@@ -135,16 +135,10 @@ class Bonus {
     }
 
     void bonusFunc_inquiry() {
-        cout << "Enter value for Bonus Item (J = Move forward 3 steps, K = Get double the move, L = Get an extra turn): ";
+        cout << "Enter value for Bonus Item (j = Move forward 3 steps, k = Get double the move, l = Get an extra turn): ";
         for (int i=0; i < bonusNum; i++) { 
             cin >> JKLFunc;
             toupper(JKLFunc);
-            if (JKLFunc == 'J' || JKLFunc == 'K' || JKLFunc == 'L') {
-            }
-            else {
-                cout << "Please Enter A Valid Value For Bonus Item ! (J/K/L): ";
-                cin >> JKLFunc;
-            }
             bonusFunc.push_back(JKLFunc);
         }
     }
@@ -158,13 +152,9 @@ class Bonus {
             bonus_inquiry();
         }
         else {
-            cout <<"Enter Bonus Item location In Ascending Order (1 to " << box-1 << "): " << endl;
+            cout <<"Enter Bonus Item location In Ascending Order (1 to " << box-1 << "): ";
         for (int i=0; i < bonusNum; i++) { 
             cin >> temp;
-            if (temp > box || temp <= 0) {
-                cout << "Please Enter Bonus Item location In Ascending Order! (1 to " << box-1 << "): " << endl;
-                cin >> temp;
-            }
             bonusLocation.push_back(temp);
         }
         bonusFunc_inquiry();
@@ -179,25 +169,25 @@ class Bonus {
             switch(bonusFunc[i]) {
                 case 'J':
                 case 'j':
-                cout << "Bonus Item" << counter << "  Function :(Move forward 3 steps )" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item: " << counter << "  Function : Move forward 3 steps " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
 
                 case 'K':
                 case 'k':
-                cout <<"Bonus Item" << counter << "  Function :(Movement got doubled)" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item: " << counter << "  Function : Movement got doubled" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
 
                 case 'L':
                 case 'l':
-                cout << "Bonus Item" << counter << "  Function :(Extra turn given )" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item: " << counter << "  Function : Extra turn given " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
 
                 default:
-                cout << "Bonus Item" << counter << "  No Bonus Item due to inserting invalid value " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item: " << counter << "  No Bonus Item due to inserting invalid value " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
             }
             counter++;
         }
     }
 
-} bonus ; 
+};
