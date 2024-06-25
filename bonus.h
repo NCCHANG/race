@@ -179,21 +179,21 @@ class Bonus {
             switch(bonusFunc[i]) {
                 case 'J':
                 case 'j':
-                cout << "Bonus Item (Move forward 3 steps )" << counter << ":" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item" << counter << "  Function :(Move forward 3 steps )" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
 
                 case 'K':
                 case 'k':
-                cout <<"Bonus Item (Movement got doubled)"<< counter << ":" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout <<"Bonus Item" << counter << "  Function :(Movement got doubled)" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
 
                 case 'L':
                 case 'l':
-                cout << "Bonus Item (Extra turn given )" << counter << ":" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item" << counter << "  Function :(Extra turn given )" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
 
                 default:
-                cout << "No Bonus Item due to inserting invalid value "<< counter << ":" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item" << counter << "  No Bonus Item due to inserting invalid value " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
             }
             counter++;

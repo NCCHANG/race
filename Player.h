@@ -74,7 +74,7 @@ public:
             getline(cin, email);
 
             do {
-                cout << "Select your racer (Batman, Flash, Superman): ";
+                cout << "Select your racer (batman, flash, superman): ";
                 getline(cin, racer);
 
                 if (racer != batman && racer != flash && racer != superman) {
