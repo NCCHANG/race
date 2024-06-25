@@ -204,11 +204,12 @@ public:
                 default:
                 cout << "Obstacle " << counter << ":" << setw(2) << "  Location: " 
                      << obstacleLocation[i] << setw(3) 
-                     << "  Function: No Function since enter wrong value" << endl << endl;
+                     << "  Function: No Function since enter wrong value" << endl;
                 break;
             }
             counter++;
         }
+        cout << endl;
     }
 
 }; 
