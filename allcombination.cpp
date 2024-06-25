@@ -417,7 +417,7 @@ int main()
     obstacle.obstacleLocation = obstacle.obstacle_inquiry();
     obstacle.obstacleXYPosition(obstacle.obstacleLocation);
     obstacle.printObstacleInfo();
-    bonus.bonusLocation = bonus.bonus_inquiry();
+    bonus.bonusLocation = bonus.bonus_inquiry(obstacle);
     bonus.bonusXYPosition(bonus.bonusLocation);
     bonus.printBonusInfo();
     l.printLayout(obstacle, bonus, obstacle.obstacleLocation, bonus.bonusLocation, bridge.bridgeYValues);
