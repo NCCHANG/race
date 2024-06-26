@@ -75,7 +75,7 @@ class Bonus {
                 if ((racerXPosition == bonusXLocation[i]) && racerYPosition == bonusYLocation[i]) {
                     bonusHit = true;
                     char choice;
-                    cout << "Do you want to use the bonus item immediately? (y/n): ";
+                    cout << "Do you want to use the bonus item immediately for " << racername << "? (y/n): ";
                     cin >> choice;
                     if (tolower(choice) == 'y') {
                         switch(bonusFunc[i]) {
@@ -208,5 +208,4 @@ class Bonus {
             counter++;
         }
     }
-
 };
