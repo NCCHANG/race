@@ -105,7 +105,7 @@ class Bonus {
             racerXPosition -= 1;
         } else if (bonusHit == false && racername == "Superman") {
             racerXPosition += 1;
-        }
+        } 
     }
 
 
@@ -188,21 +188,21 @@ class Bonus {
             switch(bonusFunc[i]) {
                 case 'J':
                 case 'j':
-                cout << "Bonus Item: " << counter << "  Function : Move forward 3 steps " << setw(2) << "  Location: " << bonusLocation[i] << endl;
+                cout << "Bonus Item: " << counter << "  Location: " << bonusLocation[i] << "  Function : Move forward 3 steps" << endl;
                 break;
 
                 case 'K':
                 case 'k':
-                cout << "Bonus Item: " << counter << "  Function : Movement got doubled" << setw(2) << "  Location: " << bonusLocation[i] << endl;
+                cout << "Bonus Item: " << counter << "  Location: " << bonusLocation[i] << "  Function : Movement got doubled" << endl;
                 break;
 
                 case 'L':
                 case 'l':
-                cout << "Bonus Item: " << counter << "  Function : Extra turn given " << setw(2) << "  Location: " << bonusLocation[i] << endl;
+                cout << "Bonus Item: " << counter << "  Location: " << bonusLocation[i] << "  Function : Extra turn given" << endl;
                 break;
 
                 default:
-                cout << "Bonus Item: " << counter << "  No Bonus Item due to inserting invalid value " << setw(2) << "  Location: " << bonusLocation[i] << endl;
+                cout << "Bonus Item: " << counter << "  Location: " << bonusLocation[i] << "  No Bonus Item due to inserting invalid value " << endl;
                 break;
             }
             counter++;

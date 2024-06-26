@@ -177,7 +177,6 @@ public:
 
     void printObstacleInfo() {   // Print each obstacle information
         int counter = 1;
-        cout << endl;
         for (int i = 0; i<obstacleNum; i++) {
             switch(obstacleFunc[i]) {
                 case 'A':

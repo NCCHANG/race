@@ -414,6 +414,7 @@ int main()
     l.printLayout(obstacle, bonus);
     lap_inquiry();
     bridge.bridgeYValues = bridge.bridge_inquiry();
+    cout << endl;
     obstacle.obstacleLocation = obstacle.obstacle_inquiry();
     obstacle.obstacleXYPosition(obstacle.obstacleLocation);
     obstacle.printObstacleInfo();
@@ -421,6 +422,7 @@ int main()
     bonus.bonusXYPosition(bonus.bonusLocation);
     bonus.printBonusInfo();
     l.printLayout(obstacle, bonus, obstacle.obstacleLocation, bonus.bonusLocation, bridge.bridgeYValues);
+    cin.get();
     cout << endl;
     while (gameRunning) {
         // this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
@@ -450,6 +452,7 @@ int main()
         l.printLayout(obstacle, bonus, {}, {}, bridge.bridgeYValues);
         checkWinner();
         congratulateWinner(Player::userslist);
+        cin.get();
         cout << endl;
     }
     cout << endl;
