@@ -74,20 +74,23 @@ class Bonus {
             for (int i = 0; i < bonusNum; i++) {
                 if ((racerXPosition == bonusXLocation[i]) && racerYPosition == bonusYLocation[i]) {
                     bonusHit = true;
-                    cout << "Do you want to use the bonus item immediately? (Y/N): ";
                     char choice;
+                    cout << "Do you want to use the bonus item immediately? (y/n): ";
                     cin >> choice;
-                    if (toupper(choice) == 'Y') {
+                    if (tolower(choice) == 'y') {
                         switch(bonusFunc[i]) {
                             case 'J':
+                            case 'j':
                                 moveForth(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
                                 cout << racername << " used bonus item & moved forward 3 steps." << endl << endl;
                                 break;
                             case 'K':
+                            case 'k':
                                 doubleSteps(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
                                 cout << racername << " used bonus item & doubled their steps." << endl << endl;
                                 break;
                             case 'L':
+                            case 'l':
                                 extraTurn(step, xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
                                 cout << racername << " used bonus item & got an extra turn." << endl << endl;
                                 break;
@@ -138,7 +141,7 @@ class Bonus {
         cout << "Enter value for Bonus Item (j = Move forward 3 steps, k = Get double the move, l = Get an extra turn): ";
         for (int i=0; i < bonusNum; i++) { 
             cin >> JKLFunc;
-            toupper(JKLFunc);
+            tolower(JKLFunc);
             bonusFunc.push_back(JKLFunc);
         }
     }
@@ -171,6 +174,7 @@ class Bonus {
                 continue;
             }
             bonusLocation.push_back(temp);
+            
         }
         bonusFunc_inquiry();
         }
@@ -184,21 +188,21 @@ class Bonus {
             switch(bonusFunc[i]) {
                 case 'J':
                 case 'j':
-                cout << "Bonus Item: " << counter << "  Function : Move forward 3 steps " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item: " << counter << "  Function : Move forward 3 steps " << setw(2) << "  Location: " << bonusLocation[i] << endl;
                 break;
 
                 case 'K':
                 case 'k':
-                cout << "Bonus Item: " << counter << "  Function : Movement got doubled" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item: " << counter << "  Function : Movement got doubled" << setw(2) << "  Location: " << bonusLocation[i] << endl;
                 break;
 
                 case 'L':
                 case 'l':
-                cout << "Bonus Item: " << counter << "  Function : Extra turn given " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item: " << counter << "  Function : Extra turn given " << setw(2) << "  Location: " << bonusLocation[i] << endl;
                 break;
 
                 default:
-                cout << "Bonus Item: " << counter << "  No Bonus Item due to inserting invalid value " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+                cout << "Bonus Item: " << counter << "  No Bonus Item due to inserting invalid value " << setw(2) << "  Location: " << bonusLocation[i] << endl;
                 break;
             }
             counter++;
