@@ -199,7 +199,7 @@ class Bonus {
                 break;
 
                 default:
-                cout << "Bonus Item: " << counter << "  Location: " << bonusLocation[i] << "  No Bonus Item due to inserting invalid value " << endl;
+                cout << "Bonus Item: " << counter << "  Location: " << bonusLocation[i] << "  No function due to inserting invalid value " << endl;
                 break;
             }
             counter++;
