@@ -53,9 +53,9 @@ class Bonus {
         calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
 
-    void doubleSteps(int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
+    void doubleSteps(int step, int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
 
-        racerLocation *= 2;
+        racerLocation = step *2;
         calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
 
@@ -65,7 +65,7 @@ class Bonus {
         calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
 
-    void checkBonus(int step, int xInitial, int &racerXPosition, int &racerYPosition, int &racerLocation, string racername) {
+    bool checkBonus(int step, int xInitial, int &racerXPosition, int &racerYPosition, int &racerLocation, string racername) {
         bool bonusHit = false;
         auto oX = find(bonusXLocation.begin(), bonusXLocation.end(), racerXPosition);
         auto oY = find(bonusYLocation.begin(), bonusYLocation.end(), racerYPosition);
@@ -75,9 +75,6 @@ class Bonus {
                 if ((racerXPosition == bonusXLocation[i]) && racerYPosition == bonusYLocation[i]) {
                     bonusHit = true;
                     char choice;
-                    cout << "Do you want to use the bonus item immediately for " << racername << "? (y/n): ";
-                    cin >> choice;
-                    if (tolower(choice) == 'y') {
                         switch(bonusFunc[i]) {
                             case 'J':
                             case 'j':
@@ -86,7 +83,7 @@ class Bonus {
                                 break;
                             case 'K':
                             case 'k':
-                                doubleSteps(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                                doubleSteps(step, xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
                                 cout << racername << " used bonus item & doubled their steps." << endl << endl;
                                 break;
                             case 'L':
@@ -98,7 +95,6 @@ class Bonus {
                                 break;
                         }
                     }
-                }
             }
         }
         if (bonusHit == false && racername == "Flash") {
@@ -106,6 +102,7 @@ class Bonus {
         } else if (bonusHit == false && racername == "Superman") {
             racerXPosition += 1;
         } 
+        return bonusHit;
     }
 
 

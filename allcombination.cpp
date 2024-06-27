@@ -364,32 +364,52 @@ void batmanMove()
     logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft,batmanEnded);
 }
 
-void checkObstacleAfterBridge(Obstacle obstacle) {
+bool checkObstacleAfterBridge(Obstacle obstacle) {
+    bool supermanMove;
+    bool batmanMove;
+    bool flashMove;
     supermanXPosition -= 1;
     flashXPosition += 1;
-    obstacle.checkObstacle(batmanStep, 2, batmanXPosition,
+    batmanMove = obstacle.checkObstacle(batmanStep, 2, batmanXPosition,
                             batmanYPosition, batmanLocation, "Batman");
-    obstacle.checkObstacle(supermanStep, 3, supermanXPosition, 
+    supermanMove = obstacle.checkObstacle(supermanStep, 3, supermanXPosition, 
                             supermanYPosition, supermanLocation, "Superman");
-    obstacle.checkObstacle(flashStep, 1, flashXPosition, 
+    flashMove = obstacle.checkObstacle(flashStep, 1, flashXPosition, 
                             flashYPosition, flashLocation, "Flash");
+    if (supermanMove||batmanMove||flashMove)
+        return true;
+    return false;
 }
 
-void checkBonusAfterBridge(Bonus bonus) {
+bool checkBonusAfterBridge(Bonus bonus) {
+    bool supermanMove;
+    bool batmanMove;
+    bool flashMove;
     supermanXPosition -= 1;
     flashXPosition += 1;
-    bonus.checkBonus(batmanStep, 2, batmanXPosition, 
+    batmanMove = bonus.checkBonus(batmanStep, 2, batmanXPosition, 
                         batmanYPosition, batmanLocation, "Batman");
-    bonus.checkBonus(supermanStep, 3, supermanXPosition, 
+    supermanMove = bonus.checkBonus(supermanStep, 3, supermanXPosition, 
                         supermanYPosition, supermanLocation, "Superman");
-    bonus.checkBonus(flashStep, 1, flashXPosition, 
+    flashMove = bonus.checkBonus(flashStep, 1, flashXPosition, 
                         flashYPosition, flashLocation, "Flash");
+    if (supermanMove||batmanMove||flashMove)
+        return true;
+    return false;
 }
 
 void GameStart(){
         cout << "\n";
         QLayout q;
         q.StartLayout();
+}
+
+void CheckIfHit(Obstacle obstacle, Bonus bonus) {
+    bool hitObs, hitBon;
+    do {
+        hitObs = checkObstacleAfterBridge(obstacle);
+        hitBon = checkBonusAfterBridge(bonus);
+    } while (hitObs||hitBon);
 }
 
 int main()
@@ -422,21 +442,17 @@ int main()
     bonus.bonusXYPosition(bonus.bonusLocation);
     bonus.printBonusInfo();
     l.printLayout(obstacle, bonus, obstacle.obstacleLocation, bonus.bonusLocation, bridge.bridgeYValues);
-    cin.get();
     cout << endl;
     while (gameRunning) {
-        // this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
-        cin.get();
+        this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
         batmanMove();
-        batmanStep = step;
+        batmanStep = step; 
         supermanMove();
         supermanStep = step;
         flashMove();
         flashStep = step;
 
-        checkObstacleAfterBridge(obstacle);
-
-        checkBonusAfterBridge(bonus);
+        CheckIfHit(obstacle,bonus);
 
         bridge.checkIfAtBridgeNMove(1, flashXPosition,
             flashYPosition, flashLocation);
@@ -445,14 +461,11 @@ int main()
         bridge.checkIfAtBridgeNMove(2, batmanXPosition,
             batmanYPosition, batmanLocation);
 
-        checkObstacleAfterBridge(obstacle);
-
-        checkBonusAfterBridge(bonus);
+        CheckIfHit(obstacle,bonus);
 
         l.printLayout(obstacle, bonus, {}, {}, bridge.bridgeYValues);
         checkWinner();
         congratulateWinner(Player::userslist);
-        cin.get();
         cout << endl;
     }
     cout << endl;

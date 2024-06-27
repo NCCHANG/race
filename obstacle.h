@@ -73,7 +73,7 @@ public:
         calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
 
-    void checkObstacle(int step, int xInitial, int &racerXPosition, 
+    bool checkObstacle(int step, int xInitial, int &racerXPosition, 
                         int &racerYPosition, int &racerLocation, 
                         string racername) {  // Check did the player hit obstacle or not
         bool obstacleOccur = false;
@@ -116,6 +116,7 @@ public:
         } else if (obstacleOccur == false && racername == "Superman") {
             racerXPosition += 1;
         }
+        return obstacleOccur;
     }
 
     // This function is to store XY coordinate for each obstacle location
