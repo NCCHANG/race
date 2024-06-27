@@ -55,7 +55,7 @@ class Bonus {
 
     void doubleSteps(int step, int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
 
-        racerLocation = step *2;
+        racerLocation = racerLocation + step;
         calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
 
@@ -74,7 +74,6 @@ class Bonus {
             for (int i = 0; i < bonusNum; i++) {
                 if ((racerXPosition == bonusXLocation[i]) && racerYPosition == bonusYLocation[i]) {
                     bonusHit = true;
-                    char choice;
                         switch(bonusFunc[i]) {
                             case 'J':
                             case 'j':
