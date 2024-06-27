@@ -5,6 +5,7 @@
 #include <time.h>
 #include <vector>
 #include <algorithm>
+#include "obstacle.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -45,8 +46,6 @@ int flashLocation = 0;
 int supermanLocation = 0;
 int batmanLocation = 0;
 
-#include "obstacle.h"
-
 class layout {
 
     void plusMinus(int x) { //+---+---+ (depends on the x)
@@ -65,7 +64,7 @@ class layout {
         }
     }
 
-    void straightLineBorder (int x, int y, vector<int> myXobstacle) { //|   |   |   |   |   |   |   | (depends on the x)
+    void straightLineBorder (int x, int y, vector<int> myXobstacle, Obstacle obstacle) { //|   |   |   |   |   |   |   | (depends on the x)
         bool printO = false;
         auto rx = find(obstacle.obstacleXLocation.begin(), obstacle.obstacleXLocation.end(), x);
         auto ry = find(obstacle.obstacleYLocation.begin(), obstacle.obstacleYLocation.end(), y);
@@ -92,7 +91,7 @@ class layout {
             }
     }
 
-    void straightLineNotBorder (int x, int y, vector<int> myXobstacle) { //|   |                |   | (depends on x)
+    void straightLineNotBorder (int x, int y, vector<int> myXobstacle, Obstacle obstacle) { //|   |                |   | (depends on x)
         bool printO = false;
         vector<int>::iterator rx = find(obstacle.obstacleXLocation.begin(), obstacle.obstacleXLocation.end(), x);
         vector<int>::iterator ry = find(obstacle.obstacleYLocation.begin(), obstacle.obstacleYLocation.end(), y);
@@ -135,10 +134,10 @@ class layout {
             for (int x = 0; x < width; x++) //|   |   |   |   | 
             {
                 if (y == 0 || y == height-1) {
-                    straightLineBorder(x, y, myXObstacle);
+                    straightLineBorder(x, y, myXObstacle, obstacle);
                 }
                 else {
-                    straightLineNotBorder(x, y, myXObstacle);
+                    straightLineNotBorder(x, y, myXObstacle, obstacle);
                 }
             }
 
@@ -296,6 +295,7 @@ int main()
 {
     string confirmation;
     layout l;
+    Obstacle obstacle(width, height, box, topLeftCoordinate, topRightCoordinate, botRightCoordinate);
     box_inquiry();
     lap_inquiry();
     obstacle.obstacleLocation = obstacle.obstacle_inquiry();
