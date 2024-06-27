@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <windows.h>
 
 using namespace std;
 
@@ -91,12 +92,15 @@ public:
             switch (x)
             {
             case 1:
+            cout << "Flash hit bridge!" << endl;
                 x = width - 4;
                 break;
             case 2:
+            cout << "Batman hit bridge!" << endl;
                 x = width - 3;
                 break;
             case 3:
+            cout << "Superman hit bridge!" << endl;
                 x = width - 2;
                 break;
             }
