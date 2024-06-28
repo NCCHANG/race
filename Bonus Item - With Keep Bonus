@@ -5,7 +5,6 @@
 #include <time.h>
 #include <vector>
 #include <algorithm>
-#include <cctype>
 
 using namespace std;
 using namespace std::chrono;
@@ -13,12 +12,10 @@ using namespace std::chrono;
 //configuration
 int height = 11;
 int width = 49;
-
 int box = 10;
 int topRightCoordinate = 21;
 int botRightCoordinate = 31;
 int topLeftCoordinate = 10;
-
 bool gameRunning = true;
 
 //flash
@@ -47,7 +44,8 @@ int supermanLocation = 0;
 int batmanLocation = 0;
 
 class Bonus {
-public:
+    public:
+
     int bonusNum, temp = 0;
     char JKLFunc;
     int i = 0;
@@ -55,131 +53,91 @@ public:
     vector<int> bonusLocation;
     vector<int> bonusXLocation;
     vector<int> bonusYLocation;
-    vector<char> bonusFunc;
-    vector<int> keptBonusLocation;
-    vector<char> keptBonusFunc;
-    bool bonusUsedNow = false; // Track if a bonus was used in the current round
-
+    vector<int> bonusFunc;
+    vector<char> bonusBag;
+    
+    
     void calculateXY(int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
         int coordinate = 0;
         while (coordinate < (box + 10)) {
             if (coordinate == racerLocation) {
-                racerxCoordinate = xCoordinate;
+                racerxCoordinate = xCoordinate; 
                 raceryCoordinate = yCoordinate;
                 break;
             }
-
-            if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)) {
+            if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
                 xCoordinate += 4;
             } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
                 yCoordinate += 1;
-            } else if (coordinate >= botRightCoordinate && coordinate < box) {
+            }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
                 xCoordinate -= 4;
-            } else if (coordinate < topLeftCoordinate || (coordinate < (topLeftCoordinate + box) && coordinate >= box)) {
+            } else if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
                 yCoordinate -= 1;
             }
+            
             coordinate++;
-        }
+        } 
     }
-
     void moveForth(int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
+        
         racerLocation += 3;
         calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
-
     void doubleSteps(int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
         racerLocation *= 2;
         calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
-
     void extraTurn(int step, int xCoordinate, int yCoordinate, int &racerLocation, int &racerxCoordinate, int &raceryCoordinate) {
+        
         racerLocation += step;
         calculateXY(xCoordinate, yCoordinate, racerLocation, racerxCoordinate, raceryCoordinate);
     }
-
-     void checkBonus(int step, int xInitial, int &racerXPosition, int &racerYPosition, int &racerLocation, string racername) {
-        bool bonusHit = false;
-        auto oX = find(bonusXLocation.begin(), bonusXLocation.end(), racerXPosition);
-        auto oY = find(bonusYLocation.begin(), bonusYLocation.end(), racerYPosition);
-
-        if (oX != bonusXLocation.end() && oY != bonusYLocation.end()) {
-            for (int i = 0; i < bonusNum; i++) {
-                if ((racerXPosition == bonusXLocation[i]) && (racerYPosition == bonusYLocation[i])) {
-                    bonusHit = true;
-                    if (!bonusUsedNow) { // Only ask if a bonus hasn't been used in this round
-                        char choice;
-                        do {
-                            cout << "Do you want to use the bonus item immediately? (Y/N): ";
-                            cin >> choice;
-                            choice = toupper(choice);
-                            if (choice == 'Y') {
-                                useBonus(i, step, xInitial, racerLocation, racerXPosition, racerYPosition, racername);
-                                bonusUsedNow = true; // Mark bonus as used for this round
-                                break; // Exit the do-while loop after using the bonus item
-                            } else if (choice == 'N') {
-                                keepBonus(i);
-                                break; // Exit the do-while loop after keeping the bonus item
-                            } else {
-                                cout << "Invalid input. Please enter 'Y' or 'N'." << endl;
-                            }
-                        } while (true);
-                    } else {
-                        // If bonus was already used this round, move the player based on their character
-                        moveBasedOnCharacter(racername, racerXPosition);
+void checkBonus(int step, int xInitial, int &racerXPosition, int &racerYPosition, int &racerLocation, string racername) {
+    bool bonusHit = false;
+    auto oX = find(bonusXLocation.begin(), bonusXLocation.end(), racerXPosition);
+    auto oY = find(bonusYLocation.begin(), bonusYLocation.end(), racerYPosition);
+    if (oX != bonusXLocation.end() && oY != bonusYLocation.end()) {
+        for (int i = 0; i < bonusNum; i++) {
+            if ((racerXPosition == bonusXLocation[i]) && racerYPosition == bonusYLocation[i]) {
+                bonusHit = true;
+                cout << racername << " got a bonus item!" << endl; // Message when a player gets a bonus item
+                cout << "Do you want to use the bonus item immediately? (Y/N): ";
+                char choice;
+                cin >> choice;
+                if (toupper(choice) == 'Y') {
+                    switch(bonusFunc[i]) {
+                        case 'J':
+                            moveForth(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                            cout << racername << " used bonus item & moved forward 3 steps." << endl << endl;
+                            break;
+                        case 'K':
+                            doubleSteps(xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                            cout << racername << " used bonus item & doubled their steps." << endl << endl;
+                            break;
+                        case 'L':
+                            extraTurn(step, xInitial, height-1, racerLocation, racerXPosition, racerYPosition);
+                            cout << racername << " used bonus item & got an extra turn." << endl << endl;
+                            break;
+                        default:
+                            break;
                     }
+                } else {
+                    keepBonus(bonusFunc[i]);
                 }
             }
         }
-        if (!bonusHit) {
-            moveBasedOnCharacter(racername, racerXPosition);
-        }
     }
-
-    void moveBasedOnCharacter(string racername, int &racerXPosition) {
-        if (racername == "Flash") {
-            racerXPosition -= 1;
-        } else if (racername == "Superman") {
-            racerXPosition += 1;
-        }
+    if (bonusHit == false && racername == "Flash") {
+        racerXPosition -= 1;
+    } else if (bonusHit == false && racername == "Superman") {
+        racerXPosition += 1;
     }
+}
 
-    void keepBonus(int i) {
-        keptBonusLocation.push_back(bonusXLocation[i]);
-        keptBonusFunc.push_back(bonusFunc[i]);
-        cout << "Bonus item kept for next turn." << endl << endl;
-    }
-
-    void useBonus(int i, int step, int xInitial, int &racerLocation, int &racerXPosition, int &racerYPosition, string racername) {
-        switch (bonusFunc[i]) {
-            case 'J':
-                moveForth(xInitial, height - 1, racerLocation, racerXPosition, racerYPosition);
-                cout << racername << " used bonus item & moved forward 3 steps." << endl << endl;
-                break;
-            case 'K':
-                doubleSteps(xInitial, height - 1, racerLocation, racerXPosition, racerYPosition);
-                cout << racername << " used bonus item & doubled their steps." << endl << endl;
-                break;
-            case 'L':
-                extraTurn(step, xInitial, height - 1, racerLocation, racerXPosition, racerYPosition);
-                cout << racername << " used bonus item & got an extra turn." << endl << endl;
-                break;
-            default:
-                break;
-        }
-    }
-
-    void useKeptBonus(int xInitial, int &racerXPosition, int &racerYPosition, int &racerLocation, string racername) {
-        if (!keptBonusLocation.empty()) {
-            int i = 0;
-            while (i < keptBonusLocation.size()) {
-                useBonus(i, 1, xInitial, racerLocation, racerXPosition, racerYPosition, racername);
-                i++;
-            }
-            keptBonusLocation.clear(); // Clear kept bonuses after using them
-            keptBonusFunc.clear();
-        }
-    }
-
+    void keepBonus(char bonus) {
+        bonusBag.push_back(bonus);
+        cout << "Bonus item stored for later use." << endl;
+}
     void bonusXYPosition(vector<int> myXbonus) {
         int xCoordinate = 2;
         int yCoordinate = height - 1;
@@ -192,87 +150,75 @@ public:
                 bonusYLocation.push_back(yCoordinate);
                 i++;
             }
-
-            if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)) {
+            if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
                 xCoordinate += 4;
             } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
                 yCoordinate += 1;
-            } else if (coordinate >= botRightCoordinate && coordinate < box) {
+            }  else if (coordinate >= botRightCoordinate && coordinate < box)  {
                 xCoordinate -= 4;
-            } else if (coordinate < topLeftCoordinate || (coordinate < (topLeftCoordinate + box) && coordinate >= box)) {
+            } else if (coordinate < topLeftCoordinate ||(coordinate < (topLeftCoordinate + box) && coordinate >= box)){
                 yCoordinate -= 1;
             }
-
-            coordinate++;
-        }
+            
+            coordinate ++;
+        }  
     }
-
     void bonusFunc_inquiry() {
         cout << "Enter value for Bonus Item (J = Move forward 3 steps, K = Get double the move, L = Get an extra turn): ";
-        for (int i = 0; i < bonusNum; i++) {
+        for (int i=0; i < bonusNum; i++) { 
             cin >> JKLFunc;
-            JKLFunc = toupper(JKLFunc);
-            if (JKLFunc == 'J' || JKLFunc == 'K' || JKLFunc == 'L') {
-            } else {
-                cout << "Please Enter A Valid Value For Bonus Item ! (J/K/L): ";
-                cin >> JKLFunc;
-                JKLFunc = toupper(JKLFunc);
-            }
+            toupper(JKLFunc);
             bonusFunc.push_back(JKLFunc);
         }
     }
-
-    vector<int> bonus_inquiry() {
+    vector<int>  bonus_inquiry() {
+    
         cout << "Enter the desired total of Bonus Item for this game (2 to 6): ";
         cin >> bonusNum;
-        if (bonusNum < 2 || bonusNum > 6) {
+        if (bonusNum < 2 || bonusNum > 6){
             cout << "Please enter a Bonus Item amount that is within the range !" << endl;
             bonus_inquiry();
-        } else {
-            cout << "Enter Bonus Item location In Ascending Order (1 to " << box - 1 << "): " << endl;
-            for (int i = 0; i < bonusNum; i++) {
-                cin >> temp;
-                if (temp > box || temp <= 0) {
-                    cout << "Please Enter Bonus Item location In Ascending Order! (1 to " << box - 1 << "): " << endl;
-                    i--;
-                } else if (i != 0 && temp <= bonusLocation[i - 1]) {
-                    cout << "Please Enter Bonus Item location In Ascending Order! (1 to " << box - 1 << "): " << endl;
-                    i--;
-                } else {
-                    bonusLocation.push_back(temp);
-                }
-            }
+        }
+        else {
+            cout <<"Enter Bonus Item location In Ascending Order (1 to " << box-1 << "): " << endl;
+        for (int i=0; i < bonusNum; i++) { 
+            cin >> temp;
+            bonusLocation.push_back(temp);
+        }
+        bonusFunc_inquiry();
         }
         return bonusLocation;
     }
-
-    void printBonusInfo() {
+    void printBonusInfo() { 
         int counter = 1;
         cout << endl;
-        for (int i = 0; i < bonusNum; i++) {
-            switch (bonusFunc[i]) {
-            case 'J':
-                cout << "Bonus Item (Move forward 3 steps )" << counter << ":" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+        for (int i = 0; i<bonusNum; i++) {
+            switch(bonusFunc[i]) {
+                case 'J':
+                case 'j':
+                cout << "Bonus Item: " << counter << "  Function : Move forward 3 steps " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
-            case 'K':
-                cout << "Bonus Item (Movement got doubled)" << counter << ":" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+
+                case 'K':
+                case 'k':
+                cout << "Bonus Item: " << counter << "  Function : Movement got doubled" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
-            case 'L':
-                cout << "Bonus Item (Extra turn given )" << counter << ":" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+
+                case 'L':
+                case 'l':
+                cout << "Bonus Item: " << counter << "  Function : Extra turn given " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
-            default:
-                cout << "No Bonus Item due to inserting invalid value " << counter << ":" << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
+
+                default:
+                cout << "Bonus Item: " << counter << "  No Bonus Item due to inserting invalid value " << setw(2) << "  Location: " << bonusLocation[i] << setw(3) << endl;
                 break;
             }
             counter++;
         }
     }
-};
+} bonus ; 
 
-Bonus bonusObj;
-Bonus& bonus = bonusObj;
 class layout {
-
     void plusMinus(int x) { //+---+---+ (depends on the x)
         if (x%4 == 0) {
             cout << '+';
@@ -280,7 +226,6 @@ class layout {
             cout << '-';
         }
     }
-
     void plusMinusNotBorder(int x) { //+---+                +---+ (depends on the x)
         if ( x <= 4 || x >= width - 5) {
             plusMinus(x);
@@ -288,7 +233,6 @@ class layout {
             cout << ' ';
         }
     }
-
     void straightLineBorder (int x, int y, vector<int> myXbonus) { //|   |   |   |   |   |   |   | (depends on the x)
         bool printBonus = false;
         auto rx = find(bonus.bonusXLocation.begin(), bonus.bonusXLocation.end(), x);
@@ -315,7 +259,6 @@ class layout {
                 cout <<' ';
             }
     }
-
     void straightLineNotBorder (int x, int y, vector<int> myXbonus) { //|   |                |   | (depends on x)
         bool printBonus = false;
         vector<int>::iterator rx = find(bonus.bonusXLocation.begin(), bonus.bonusXLocation.end(), x);
@@ -344,14 +287,11 @@ class layout {
     }
     
     public:
-
     void printLayout(vector<int> myXbonus= {}) {
         for (int x = 0; x < width; x++) // +---+---+---
         {
             plusMinus(x);
         }
-
-
         for (int y = 0; y < height; y++)
         {
             cout << '\n';
@@ -365,7 +305,6 @@ class layout {
                     straightLineNotBorder(x, y, myXbonus);
                 }
             }
-
             cout << '\n';
             //plusminus section
             for (int x = 0; x < width; x++) // +---+---+---
@@ -413,7 +352,6 @@ void logic(int coordinateX, int &racerlocation, int &racerX, int &racerY,
     int coordinate = 0;
     int ox = coordinateX;
     int oy = coordinateY;
-
     //check if round end
     if (racerlocation >= box && roundLeft != 1) {
         racerlocation -= box;
@@ -423,13 +361,11 @@ void logic(int coordinateX, int &racerlocation, int &racerX, int &racerY,
     }
     //getting x and y for the coordination
     while (coordinate < (box + 10)) {
-
         if (racerlocation == coordinate) {
             racerX = coordinateX;
             racerY = coordinateY;
             break;
         }
-
         if ((coordinate >= topLeftCoordinate && coordinate < topRightCoordinate) || coordinate >= (topLeftCoordinate + box)){
             coordinateX += 4;
         } else if (coordinate >= topRightCoordinate && coordinate < botRightCoordinate) {
@@ -441,7 +377,6 @@ void logic(int coordinateX, int &racerlocation, int &racerX, int &racerY,
         }
         
         coordinate ++;
-
     }  
 }
 
@@ -457,15 +392,12 @@ void box_inquiry() {
     while (boxExtraNeeded > 0) {
         height += 1;   // expand verticcal
         boxExtraNeeded -= 2;
-
         topLeftCoordinate ++;
         topRightCoordinate ++;
         botRightCoordinate += 2;
-
         if (boxExtraNeeded > 0) { 
             width += 4;  //(1 box = 4width (up and down)) expand horizontal
             boxExtraNeeded -= 2;
-
             topRightCoordinate ++;
             botRightCoordinate ++;
         }
@@ -516,7 +448,6 @@ void  batmanMove()
     logic(2,batmanLocation,batmanXPosition,batmanYPosition,batmanLapLeft,batmanEnded);
 }
 
-
 int main()
 {
     string confirmation;
@@ -524,37 +455,24 @@ int main()
     box_inquiry();
     lap_inquiry();
     bonus.bonusLocation = bonus.bonus_inquiry();
-    bonus.bonusFunc_inquiry();
     bonus.bonusXYPosition(bonus.bonusLocation);
     bonus.printBonusInfo();
     l.printLayout(bonus.bonusLocation);
     cout << endl;
-
     while (gameRunning) {
         this_thread::sleep_for(milliseconds(1300)); //pause for 1.3sec
-
         batmanMove();
         bonus.checkBonus(step, 2, batmanXPosition, batmanYPosition, batmanLocation, "Batman");
-        l.printLayout(bonus.bonusLocation); // Print layout after each move
-        checkWinner();
-        if (!gameRunning) break;
-
         supermanMove();
-        supermanXPosition -= 1; // Adjust superman's position
+        supermanXPosition -= 1;
         bonus.checkBonus(step, 3, supermanXPosition, supermanYPosition, supermanLocation, "Superman");
-        l.printLayout(bonus.bonusLocation); // Print layout after each move
-        checkWinner();
-        if (!gameRunning) break;
-
         flashMove();
-        flashXPosition += 1; // Adjust flash's position
+        flashXPosition += 1;
         bonus.checkBonus(step, 1, flashXPosition, flashYPosition, flashLocation, "Flash");
-        l.printLayout(bonus.bonusLocation); // Print layout after each move
+        l.printLayout();
         checkWinner();
+        cout << endl;
     }
-
     cout << endl;
     system("pause");
-    return 0;
 }
-
