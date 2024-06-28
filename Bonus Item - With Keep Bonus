@@ -100,6 +100,7 @@ void checkBonus(int step, int xInitial, int &racerXPosition, int &racerYPosition
         for (int i = 0; i < bonusNum; i++) {
             if ((racerXPosition == bonusXLocation[i]) && racerYPosition == bonusYLocation[i]) {
                 bonusHit = true;
+                cout << racername << " got a bonus item!" << endl; // Message when a player gets a bonus item
                 cout << "Do you want to use the bonus item immediately? (Y/N): ";
                 char choice;
                 cin >> choice;
